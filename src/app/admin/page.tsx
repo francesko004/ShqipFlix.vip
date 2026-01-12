@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ContentRefreshButton } from "@/components/admin/ContentRefreshButton";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
     const userCount = await prisma.user.count();
     const watchlistCount = await prisma.watchlistItem.count();
