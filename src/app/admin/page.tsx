@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
                     </div>
 
                     <div className="space-y-3 lg:space-y-4">
-                        {recentUsers.map((user) => (
+                        {recentUsers.map((user: any) => (
                             <div key={user.id} className="flex items-center justify-between p-3 lg:p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
                                 <div className="flex items-center gap-3 lg:gap-4 min-w-0">
                                     <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center font-bold text-xs lg:text-sm flex-shrink-0">
