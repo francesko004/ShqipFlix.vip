@@ -72,7 +72,7 @@ A premium movie and TV streaming website built with Next.js 14, Tailwind CSS, an
 
 The easiest way to deploy ShqipFlix is to use the [Vercel Platform](https://vercel.com/new).
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fshqipflix&env=DATABASE_URL,NEXTAUTH_SECRET,NEXT_PUBLIC_TMDB_API_KEY)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fshqipflix&env=DATABASE_URL,NEXTAUTH_SECRET,NEXTAUTH_URL,NEXT_PUBLIC_TMDB_API_KEY)
 
 1. Click the button above to clone and deploy.
 2. Enter your environment variables when prompted.
