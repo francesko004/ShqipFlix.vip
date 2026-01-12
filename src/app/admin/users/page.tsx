@@ -1,5 +1,6 @@
 
 import { prisma } from "@/lib/prisma";
+import { User as PrismaUser } from "@prisma/client";
 import { Users, Search, MoreVertical, Shield, User } from "lucide-react";
 import { format } from "date-fns";
 
@@ -45,7 +46,7 @@ export default async function AdminUsersPage() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {users.map((user) => (
+                        {users.map((user: PrismaUser) => (
                             <tr key={user.id} className="hover:bg-white/5 transition-colors">
                                 <td className="p-4 font-medium text-white flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
