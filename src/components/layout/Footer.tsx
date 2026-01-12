@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
@@ -22,12 +21,6 @@ export function Footer() {
                         <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
                             Experience the ultimate Albanian streaming platform. Watch unlimited movies, TV shows, and exclusive content in stunning 4K quality anywhere, anytime.
                         </p>
-                        <div className="flex items-center gap-4">
-                            <SocialLink href="#" icon={<Facebook size={18} />} label="Facebook" />
-                            <SocialLink href="#" icon={<Instagram size={18} />} label="Instagram" />
-                            <SocialLink href="#" icon={<Twitter size={18} />} label="Twitter" />
-                            <SocialLink href="#" icon={<Youtube size={18} />} label="Youtube" />
-                        </div>
                     </div>
 
                     {/* Links Columns */}
@@ -41,42 +34,6 @@ export function Footer() {
                             <li><FooterLink href="/watchlist">My List</FooterLink></li>
                         </ul>
                     </div>
-
-                    <div className="lg:col-span-2 md:col-span-1">
-                        <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Support</h4>
-                        <ul className="space-y-4 text-sm text-gray-400">
-                            <li><FooterLink href="/faq">Help Center</FooterLink></li>
-                            <li><FooterLink href="/contact">Contact Us</FooterLink></li>
-                            <li><FooterLink href="/dmca">DMCA</FooterLink></li>
-                            <li><FooterLink href="/terms">Terms of Service</FooterLink></li>
-                            <li><FooterLink href="/privacy">Privacy Policy</FooterLink></li>
-                        </ul>
-                    </div>
-
-                    {/* Newsletter / Contact Column */}
-                    <div className="lg:col-span-4 md:col-span-2 space-y-6">
-                        <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Get in Touch</h4>
-                        <div className="space-y-4">
-                            <div className="flex items-start gap-4 text-gray-400 text-sm group">
-                                <div className="p-2 rounded-lg bg-white/5 group-hover:bg-red-600/10 group-hover:text-red-500 transition-colors">
-                                    <Mail size={18} />
-                                </div>
-                                <div>
-                                    <p className="text-white font-medium mb-1">Email Support</p>
-                                    <p>support@shqipflix.vip</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-4 text-gray-400 text-sm group">
-                                <div className="p-2 rounded-lg bg-white/5 group-hover:bg-red-600/10 group-hover:text-red-500 transition-colors">
-                                    <Phone size={18} />
-                                </div>
-                                <div>
-                                    <p className="text-white font-medium mb-1">Phone</p>
-                                    <p>+355 69 123 4567</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Bottom Bar */}
@@ -84,26 +41,9 @@ export function Footer() {
                     <p className="text-gray-500 text-xs">
                         &copy; {currentYear} ShqipFlix. All rights reserved.
                     </p>
-                    <div className="flex items-center gap-6">
-                        <span className="px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                            v1.0.0 Beta
-                        </span>
-                    </div>
                 </div>
             </div>
         </footer>
-    );
-}
-
-function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
-    return (
-        <a
-            href={href}
-            aria-label={label}
-            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1"
-        >
-            {icon}
-        </a>
     );
 }
 

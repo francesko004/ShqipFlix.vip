@@ -74,7 +74,7 @@ export function DiscoveryFilters({ genres, type }: DiscoveryFiltersProps) {
                 <div className="absolute top-full left-0 mt-2 w-full max-w-2xl bg-[#1a1a2e] border border-white/10 rounded-xl shadow-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div>
                         <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Genres</h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        <div className="flex flex-wrap gap-2">
                             {genres.map((genre) => (
                                 <button
                                     key={genre.id}
@@ -92,12 +92,12 @@ export function DiscoveryFilters({ genres, type }: DiscoveryFiltersProps) {
 
                     <div>
                         <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Release Year</h3>
-                        <div className="grid grid-cols-4 gap-2">
+                        <div className="flex flex-wrap gap-2">
                             {years.map((year) => (
                                 <button
                                     key={year}
                                     onClick={() => handleFilterChange("year", year)}
-                                    className={`px-2 py-1.5 rounded text-xs text-center transition-colors ${currentYear === year
+                                    className={`px-3 py-1.5 rounded text-xs text-center transition-colors ${currentYear === year
                                         ? "bg-red-600 text-white font-bold"
                                         : "bg-white/5 text-gray-300 hover:bg-white/10"
                                         }`}

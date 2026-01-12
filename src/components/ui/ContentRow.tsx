@@ -53,11 +53,11 @@ export function ContentRow({ title, items, className }: ContentRowProps) {
 
             <div
                 ref={scrollRef}
-                className="flex overflow-x-auto overflow-y-hidden gap-3 md:gap-4 pb-4 scrollbar-hide snap-x snap-mandatory smooth-scroll"
+                className="flex overflow-x-auto overflow-y-hidden gap-3 md:gap-4 pb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide snap-x snap-mandatory smooth-scroll"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {items.map((item) => (
-                    <div key={item.id} className="flex-none w-[140px] sm:w-[160px] md:w-[200px] lg:w-[220px] snap-start">
+                    <div key={item.id} className="flex-none w-[140px] sm:w-[160px] md:w-[200px] lg:w-[220px] snap-start first:pl-0">
                         <MovieCard item={item} />
                     </div>
                 ))}

@@ -118,6 +118,13 @@ export function Navbar() {
                                 <Button className="bg-red-600 hover:bg-red-700 text-white text-sm font-bold h-9 px-4 rounded-lg" asChild>
                                     <Link href="/register">Join Free</Link>
                                 </Button>
+                                <Link
+                                    href="/login"
+                                    className="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+                                    title="Log in to view profile"
+                                >
+                                    <UserIcon className="w-6 h-6" />
+                                </Link>
                             </div>
                         )}
 
