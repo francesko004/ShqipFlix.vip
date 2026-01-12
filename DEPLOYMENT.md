@@ -13,7 +13,7 @@ The easiest way to deploy ShqipFlix is to use the [Vercel Platform](https://verc
 1. **Push your code to GitHub/GitLab/Bitbucket.**
 2. **Import the project** into Vercel.
 3. **Configure Environment Variables** in the Vercel dashboard:
-    - `DATABASE_URL`: Your PostgreSQL connection string.
+    - `POSTGRES_PRISMA_URL`: Your PostgreSQL connection string.
     - `NEXTAUTH_SECRET`: A random string (generate with `openssl rand -base64 32`).
     - `NEXTAUTH_URL`: Your Vercel deployment URL (e.g. `https://your-project.vercel.app`). *Note: Vercel automatically sets `VERCEL_URL`, but NextAuth often needs `NEXTAUTH_URL` explicitly set to the canonical URL.*
     - `NEXT_PUBLIC_TMDB_API_KEY`: Your TMDB API Key.
@@ -83,7 +83,8 @@ Update the following variables:
 
 ```env
 # Database - Use your actual database credentials
-DATABASE_URL="postgresql://shqipflix_user:your_secure_password@localhost:5432/shqipflix"
+POSTGRES_PRISMA_URL="postgresql://shqipflix_user:your_secure_password@localhost:5432/shqipflix"
+POSTGRES_URL_NON_POOLING="postgresql://shqipflix_user:your_secure_password@localhost:5432/shqipflix"
 
 # NextAuth - CRITICAL: Generate a secure secret
 NEXTAUTH_URL="https://yourdomain.com"
