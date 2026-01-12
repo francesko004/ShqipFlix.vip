@@ -54,11 +54,11 @@ export default async function TVShowsPage({ searchParams }: { searchParams: { ge
     return (
         <main className="min-h-screen bg-[#0b0c15] pb-20 text-white">
             <Navbar />
-            <div className="container mx-auto px-4 pt-32 space-y-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 border-b border-white/10 pb-6">
+            <div className="container mx-auto px-4 pt-24 sm:pt-28 md:pt-32 space-y-8 sm:space-y-10 md:space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8 border-b border-white/10 pb-4 sm:pb-6">
                     <div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">TV Shows</h1>
-                        <p className="text-gray-400 max-w-2xl">Binge-worthy series, reality favorites, and compelling documentaries from around the globe.</p>
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">TV Shows</h1>
+                        <p className="text-sm sm:text-base text-gray-400 max-w-2xl">Binge-worthy series, reality favorites, and compelling documentaries from around the globe.</p>
                     </div>
                 </div>
 
@@ -83,21 +83,21 @@ export default async function TVShowsPage({ searchParams }: { searchParams: { ge
                 />
 
                 {isFiltered ? (
-                    <div className="space-y-12">
+                    <div className="space-y-8 sm:space-y-10 md:space-y-12">
                         {filteredResults?.results?.length ? (
                             <ContentRow
                                 title={`Results for ${genre ? tvGenres.find(g => g.id.toString() === genre)?.name : ""} ${year || ""}`}
                                 items={filteredResults.results}
                             />
                         ) : (
-                            <div className="py-20 text-center">
-                                <h2 className="text-2xl font-bold text-gray-500">No TV shows found matching these filters.</h2>
-                                <p className="text-gray-600 mt-2">Try adjusting your filters or search for something else.</p>
+                            <div className="py-12 sm:py-16 md:py-20 text-center px-4">
+                                <h2 className="text-xl sm:text-2xl font-bold text-gray-500">No TV shows found matching these filters.</h2>
+                                <p className="text-sm sm:text-base text-gray-600 mt-2">Try adjusting your filters or search for something else.</p>
                             </div>
                         )}
                     </div>
                 ) : (
-                    <div className="space-y-12">
+                    <div className="space-y-8 sm:space-y-10 md:space-y-12">
                         <ContentRow title="Trending This Week" items={trending?.results || []} />
                         <ContentRow title="Airing Today" items={airingToday?.results || []} />
                         <ContentRow title="Currently On Air" items={onTheAir?.results || []} />
