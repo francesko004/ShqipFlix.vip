@@ -16,11 +16,15 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Missing username or password");
                 }
 
+                const username = credentials.username.trim();
+                console.log(`[Auth] Attempting login for user: ${username}`);
+
                 const user = await prisma.user.findUnique({
-                    where: { username: credentials.username }
+                    where: { username }
                 });
 
                 if (!user) {
+                    console.log(`[Auth] User not found: ${username}`);
                     throw new Error("User not found");
                 }
 
@@ -30,8 +34,11 @@ export const authOptions: NextAuthOptions = {
                 );
 
                 if (!isPasswordValid) {
+                    console.log(`[Auth] Invalid password for user: ${username}`);
                     throw new Error("Invalid password");
                 }
+
+                console.log(`[Auth] Login successful for user: ${username}`);
 
                 return {
                     id: user.id,
