@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ShqipFlix
 
-## Getting Started
+![ShqipFlix Banner](https://via.placeholder.com/1200x400?text=ShqipFlix+Banner)
 
-First, run the development server:
+A premium movie and TV streaming website built with Next.js 14, Tailwind CSS, and integrated with TMDB for metadata.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🎬 **Comprehensive Library**: Access thousands of movies and TV shows via TMDB integration.
+- 🔍 **Smart Search**: Real-time search with instant results.
+- 📱 **Fully Responsive**: Optimized for desktop, tablet, and mobile devices.
+- 🎨 **Modern UI**: Dark-themed, glassmorphic design with smooth animations.
+- ⚡ **High Performance**: Built on Next.js 14 with server-side rendering.
+- 🔒 **User Accounts**: Watchlists, viewing history, and personalization (requires authentication).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS, Lucide React
+- **Database**: PostgreSQL (via Prisma ORM)
+- **Authentication**: NextAuth.js
+- **Data Source**: TMDB API
 
-## Learn More
+## 📦 Installation
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js 18+
+- PostgreSQL Database
+- TMDB API Key (Get it [here](https://www.themoviedb.org/settings/api))
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Steps
 
-## Deploy on Vercel
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/shqipflix.git
+   cd shqipflix
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Configure Environment**
+   Renamed `.env.example` to `.env` and fill in your details:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Update `.env` with your credentials:
+   - `DATABASE_URL`: Your PostgreSQL connection string.
+   - `NEXTAUTH_SECRET`: Generate using `openssl rand -base64 32`.
+   - `NEXT_PUBLIC_TMDB_API_KEY`: Your TMDB API Key.
+
+4. **Setup Database**
+   ```bash
+   npx prisma generate
+   npx prisma migrate deploy
+   ```
+
+5. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
+
+   Visit `http://localhost:3000` to view the app.
+
+## 🚀 Deployment
+
+### Deploy on Vercel
+
+The easiest way to deploy ShqipFlix is to use the [Vercel Platform](https://vercel.com/new).
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fshqipflix&env=DATABASE_URL,NEXTAUTH_SECRET,NEXT_PUBLIC_TMDB_API_KEY)
+
+1. Click the button above to clone and deploy.
+2. Enter your environment variables when prompted.
+3. Your app will be live in minutes!
+
+### Manual Deployment (VPS)
+
+For deploying on a Virtual Private Server (VPS), please refer to our [Deployment Guide](DEPLOYMENT.md).
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).

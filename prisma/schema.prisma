@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  username      String          @unique
+  password      String
+  role          String          @default("USER")
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  watchlist     WatchlistItem[]
+  history       HistoryItem[]
+  notifications Notification[]
+}
+
+model WatchlistItem {
+  id          String   @id @default(cuid())
+  userId      String
+  tmdbId      Int
+  title       String
+  posterPath  String?
+  mediaType   String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tmdbId, mediaType])
+}
+
+model HistoryItem {
+  id          String   @id @default(cuid())
+  userId      String
+  tmdbId      Int
+  title       String
+  posterPath  String?
+  mediaType   String
+  lastWatched DateTime @default(now())
+  progress    Int      @default(0) // For "continue watching"
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tmdbId, mediaType])
+}
+
+model MediaContent {
+  id            Int      @id // TMDB ID
+  title         String
+  overview      String?
+  posterPath    String?
+  backdropPath  String?
+  mediaType     String   // "movie" or "tv"
+  releaseDate   String?
+  voteAverage   Float?
+  popularity    Float?
+  genreIds      String?  // Stored as JSON string e.g. "[18, 28]"
+  isVisible     Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([mediaType])
+  @@index([popularity])
+}
+
+model GlobalSettings {
+  id              Int      @id @default(1)
+  siteName        String   @default("ShqipFlix")
+  supportEmail    String   @default("support@shqipflix.vip")
+  maintenanceMode Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?  // Null for mass notifications
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO, WARNING, SUCCESS, ERROR
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([createdAt])
+}
