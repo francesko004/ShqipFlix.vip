@@ -40,7 +40,7 @@ export default async function Home() {
 
       {heroItem && <HeroSection item={heroItem} />}
 
-      <div className="container mx-auto px-4 -mt-32 relative z-20 space-y-12">
+      <div className="container mx-auto px-4 -mt-20 md:-mt-32 relative z-20 space-y-12">
         <HistoryRow />
         <RecommendationRow />
         <WatchlistRow />
