@@ -51,7 +51,7 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
             <WatchTracker item={tv} />
 
             {/* Background/Backdrop */}
-            <div className="fixed inset-0 h-[60vh] z-0">
+            <div className="fixed inset-0 h-[50vh] sm:h-[60vh] z-0">
                 <Image
                     src={backdrop}
                     alt={tv.name || "TV Show"}
@@ -62,13 +62,13 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c15] via-[#0b0c15]/80 to-transparent" />
             </div>
 
-            <div className="container mx-auto px-4 py-24 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="container mx-auto px-4 py-20 sm:py-24 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
                     {/* Main Content (Player + Info) */}
-                    <div className="lg:col-span-3 space-y-8">
+                    <div className="lg:col-span-3 space-y-6 sm:space-y-8">
                         <VideoPlayer tmdbId={tv.id} type="tv" season={seasonNumber} episode={episodeNumber} />
 
-                        <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                             <WatchlistButton item={tv} />
                             <TrailerButton videos={tv.videos?.results || []} />
 
@@ -76,7 +76,7 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                                 episodeNumber < episodes[episodes.length - 1].episode_number ? (
                                     <Link
                                         href={`/tv/${tv.id}?season=${seasonNumber}&episode=${episodeNumber + 1}`}
-                                        className="flex items-center gap-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all hover:scale-105 shadow-lg shadow-red-900/20"
+                                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-lg font-bold transition-all hover:scale-105 active:scale-100 shadow-lg shadow-red-900/20 text-sm sm:text-base touch-target"
                                     >
                                         <span>Play Next Episode</span>
                                         <span className="text-xs bg-black/20 px-1 rounded">E{episodeNumber + 1}</span>
@@ -84,7 +84,7 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                                 ) : seasonNumber < (tv.number_of_seasons || 1) && (
                                     <Link
                                         href={`/tv/${tv.id}?season=${seasonNumber + 1}&episode=1`}
-                                        className="flex items-center gap-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all hover:scale-105 shadow-lg shadow-red-900/20"
+                                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-lg font-bold transition-all hover:scale-105 active:scale-100 shadow-lg shadow-red-900/20 text-sm sm:text-base touch-target"
                                     >
                                         <span>Start Season {seasonNumber + 1}</span>
                                         <span className="text-xs bg-black/20 px-1 rounded">S{seasonNumber + 1} E1</span>
@@ -102,25 +102,25 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                             episodes={episodes}
                         />
 
-                        <div className="space-y-4">
-                            <h1 className="text-4xl font-bold text-white">{tv.name || tv.title}</h1>
-                            <div className="flex items-center gap-4 text-sm text-gray-400">
+                        <div className="space-y-3 sm:space-y-4">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">{tv.name || tv.title}</h1>
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-400">
                                 <span>{tv.first_air_date ? new Date(tv.first_air_date).getFullYear() : "N/A"}</span>
                                 <span>{tv.number_of_seasons || 0} Seasons</span>
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2">
                                     {(tv.genres || []).map(g => (
-                                        <span key={g.id} className="border border-white/20 px-2 rounded-full text-xs flex items-center">{g.name}</span>
+                                        <span key={g.id} className="border border-white/20 px-2 py-0.5 rounded-full text-xs flex items-center">{g.name}</span>
                                     ))}
                                 </div>
                             </div>
-                            <p className="text-gray-300 max-w-4xl text-lg leading-relaxed">{tv.overview}</p>
+                            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-4xl leading-relaxed">{tv.overview}</p>
                         </div>
 
                         <CastRow cast={tv.credits?.cast || []} />
                     </div>
                 </div>
 
-                <div className="mt-16">
+                <div className="mt-12 sm:mt-14 md:mt-16">
                     <ContentRow title="You May Also Like" items={tv.similar?.results || []} />
                 </div>
             </div>
