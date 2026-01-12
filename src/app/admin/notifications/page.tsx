@@ -86,7 +86,7 @@ export default async function AdminNotificationsPage() {
                     {recentNotifications.length === 0 ? (
                         <p className="text-gray-500 text-center py-8">No notifications sent yet</p>
                     ) : (
-                        recentNotifications.map((notification) => {
+                        recentNotifications.map((notification: any) => {
                             const Icon =
                                 notification.type === "SUCCESS" ? CheckCircle :
                                     notification.type === "WARNING" ? AlertTriangle :
