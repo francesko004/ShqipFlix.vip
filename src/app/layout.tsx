@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { Providers } from "@/components/layout/Providers";
+import { MobileNav } from "@/components/layout/MobileNav";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -20,11 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${outfit.variable} font-sans`}>
+      <body className={`${inter.variable} ${outfit.variable} font-sans pb-16 md:pb-0`}>
         <Providers>
           {children}
           <Analytics />
           <SpeedInsights />
+          <MobileNav />
         </Providers>
       </body>
     </html>

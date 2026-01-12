@@ -1,5 +1,7 @@
 "use client";
 
+import { AdBlockWarning } from "@/components/ui/AdBlockWarning";
+
 interface VideoPlayerProps {
     tmdbId: number;
     type: "movie" | "tv";
@@ -19,14 +21,17 @@ export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlay
     // src += "?color=e50914"; 
 
     return (
-        <div className="w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl shadow-red-900/10 border border-white/10 relative z-20">
-            <iframe
-                src={src}
-                className="w-full h-full"
-                allowFullScreen
-                allow="autoplay; encrypted-media"
-                frameBorder="0"
-            />
+        <div className="w-full relative z-20">
+            <AdBlockWarning />
+            <div className="w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl shadow-red-900/10 border border-white/10">
+                <iframe
+                    src={src}
+                    className="w-full h-full"
+                    allowFullScreen
+                    allow="autoplay; encrypted-media"
+                    frameBorder="0"
+                />
+            </div>
         </div>
     );
 }
