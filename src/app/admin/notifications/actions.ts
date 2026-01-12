@@ -16,7 +16,7 @@ export async function sendMassNotification(data: {
 
         // Create notification for each user
         await prisma.notification.createMany({
-            data: users.map(user => ({
+            data: users.map((user: { id: string }) => ({
                 userId: user.id,
                 title: data.title,
                 message: data.message,
