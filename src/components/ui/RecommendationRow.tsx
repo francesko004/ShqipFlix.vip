@@ -16,17 +16,24 @@ export function RecommendationRow() {
             fetch("/api/history")
                 .then(res => res.json())
                 .then(async data => {
-                    if (data && data.length > 0) {
+                    if (Array.isArray(data) && data.length > 0) {
                         const lastItem = data[0];
                         setLastItemTitle(lastItem.title);
 
-                        const recommendationsData = await tmdb.getSimilar(
-                            lastItem.tmdbId,
-                            lastItem.mediaType
-                        );
-                        setRecommendations(recommendationsData.results.slice(0, 15));
+                        try {
+                            const recommendationsData = await tmdb.getSimilar(
+                                lastItem.tmdbId,
+                                lastItem.mediaType
+                            );
+                            if (recommendationsData?.results) {
+                                setRecommendations(recommendationsData.results.slice(0, 15));
+                            }
+                        } catch (err) {
+                            console.error("Error fetching recommendation details:", err);
+                        }
                     }
-                });
+                })
+                .catch(err => console.error("Error fetching history for recommendations:", err));
         }
     }, [session]);
 
