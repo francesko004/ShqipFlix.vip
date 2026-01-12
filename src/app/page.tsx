@@ -5,6 +5,7 @@ import { ContentRow } from "@/components/ui/ContentRow";
 import { WatchlistRow } from "@/components/ui/WatchlistRow";
 import { HistoryRow } from "@/components/ui/HistoryRow";
 import { RecommendationRow } from "@/components/ui/RecommendationRow";
+import { DonationBanner } from "@/components/ui/DonationBanner";
 import { tmdb } from "@/lib/tmdb";
 
 export default async function Home() {
@@ -38,6 +39,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-[#0b0c15] pb-20 text-white">
       <Navbar />
+      <DonationBanner />
 
       {heroItems.length > 0 && <HeroSlider items={heroItems} />}
 

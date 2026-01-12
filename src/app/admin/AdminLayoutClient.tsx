@@ -13,7 +13,8 @@ import {
     Home,
     Menu,
     X,
-    Bell
+    Bell,
+    Coffee
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +41,7 @@ export default function AdminLayoutClient({ children, session }: AdminLayoutProp
         { href: "/admin/users", label: "Users", icon: Users },
         { href: "/admin/content", label: "Content Mgmt", icon: Film },
         { href: "/admin/notifications", label: "Notifications", icon: Bell },
+        { href: "/admin/donations", label: "Donations", icon: Coffee },
         { href: "/admin/stats", label: "Analytics", icon: BarChart3 },
         { href: "/admin/settings", label: "Site Settings", icon: Settings },
     ];

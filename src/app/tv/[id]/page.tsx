@@ -7,6 +7,7 @@ import { WatchlistButton } from "@/components/ui/WatchlistButton";
 import { TrailerButton } from "@/components/ui/TrailerButton";
 import { CastRow } from "@/components/ui/CastRow";
 import { WatchTracker } from "@/components/ui/WatchTracker";
+import { DonationButton } from "@/components/ui/DonationButton";
 import { tmdb } from "@/lib/tmdb";
 import Link from "next/link";
 import Image from "next/image";
@@ -118,6 +119,14 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
 
                         <CastRow cast={tv.credits?.cast || []} />
                     </div>
+                </div>
+
+                <div className="mt-12 sm:mt-14 md:mt-16 bg-[#1a1a2e]/40 backdrop-blur-md border border-white/5 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="space-y-2 text-center md:text-left">
+                        <h3 className="text-xl font-bold text-white">Enjoying this series?</h3>
+                        <p className="text-gray-400 text-sm">Consider supporting ShqipFlix to help us maintain our servers and add new content.</p>
+                    </div>
+                    <DonationButton />
                 </div>
 
                 <div className="mt-12 sm:mt-14 md:mt-16">

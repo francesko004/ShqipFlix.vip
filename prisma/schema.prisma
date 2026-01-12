@@ -94,3 +94,17 @@ model Notification {
   @@index([userId])
   @@index([createdAt])
 }
+
+model Donation {
+  id          String   @id @default(cuid())
+  donorName   String
+  amount      Float
+  message     String?
+  isVisible   Boolean  @default(true)
+  donatedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([donatedAt])
+  @@index([amount])
+}

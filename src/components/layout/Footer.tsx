@@ -31,7 +31,23 @@ export function Footer() {
                             <li><FooterLink href="/movies">Movies</FooterLink></li>
                             <li><FooterLink href="/tv">TV Shows</FooterLink></li>
                             <li><FooterLink href="/new">New & Popular</FooterLink></li>
-                            <li><FooterLink href="/watchlist">My List</FooterLink></li>
+                        </ul>
+                    </div>
+
+                    <div className="lg:col-span-2 md:col-span-1">
+                        <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Community</h4>
+                        <ul className="space-y-4 text-sm text-gray-400">
+                            <li><FooterLink href="/support">Support Us</FooterLink></li>
+                            <li><FooterLink href="/support#leaderboard">Leaderboard</FooterLink></li>
+                            <li>
+                                <Link
+                                    href="https://buymeacoffee.com/shqipflix"
+                                    target="_blank"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-lg text-orange-500 hover:bg-orange-500 hover:text-white transition-all text-xs font-bold"
+                                >
+                                    ☕ Buy Me a Coffee
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </div>
