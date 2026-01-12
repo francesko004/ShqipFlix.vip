@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { HeroSection } from "@/components/ui/HeroSection";
+import { HeroSlider } from "@/components/ui/HeroSlider";
 import { ContentRow } from "@/components/ui/ContentRow";
 import { WatchlistRow } from "@/components/ui/WatchlistRow";
 import { HistoryRow } from "@/components/ui/HistoryRow";
@@ -32,19 +32,20 @@ export default async function Home() {
     tmdb.discoverByGenre("movie", "16").catch(() => null), // Animation
   ]);
 
-  const heroItem = trending?.results[0] || popularMovies?.results[0];
+  // Get top 5 trending items for hero slider
+  const heroItems = trending?.results?.slice(0, 5) || popularMovies?.results?.slice(0, 5) || [];
 
   return (
     <main className="min-h-screen bg-[#0b0c15] pb-20 text-white">
       <Navbar />
 
-      {heroItem && <HeroSection item={heroItem} />}
+      {heroItems.length > 0 && <HeroSlider items={heroItems} />}
 
       <div className="container mx-auto px-4 -mt-20 md:-mt-32 relative z-20 space-y-12">
         <HistoryRow />
         <RecommendationRow />
         <WatchlistRow />
-        <ContentRow title="Trending Now" items={trending?.results?.slice(1) || []} />
+        <ContentRow title="Trending Now" items={trending?.results?.slice(5) || []} />
         <ContentRow title="Trending Movies" items={trendingMovies?.results || []} />
         <ContentRow title="Trending TV Shows" items={trendingTV?.results || []} />
         <ContentRow title="Now Playing" items={nowPlaying?.results || []} />
