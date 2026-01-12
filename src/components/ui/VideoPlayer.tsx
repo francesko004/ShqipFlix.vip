@@ -11,14 +11,20 @@ interface VideoPlayerProps {
 
 export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlayerProps) {
     let src = "";
-    if (type === "movie") {
-        src = `https://vidking.net/embed/movie/${tmdbId}`;
-    } else {
-        src = `https://vidking.net/embed/tv/${tmdbId}/${season}/${episode}`;
-    }
+    // Customization parameters to match ShqipFlix theme
+    const themeParams = new URLSearchParams({
+        color: "dc2626", // Red-600 to match site accent
+        primaryColor: "dc2626", // Alternate parameter name
+        secondaryColor: "0b0c15", // Site background color
+        iconColor: "ffffff",
+        autoplay: "0",
+    }).toString();
 
-    // Add customization/color params if needed, e.g. ?color=ff0000
-    // src += "?color=e50914"; 
+    if (type === "movie") {
+        src = `https://vidking.net/embed/movie/${tmdbId}?${themeParams}`;
+    } else {
+        src = `https://vidking.net/embed/tv/${tmdbId}/${season}/${episode}?${themeParams}`;
+    }
 
     return (
         <div className="w-full relative z-20">
