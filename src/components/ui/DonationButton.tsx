@@ -1,21 +1,22 @@
 "use client";
 
-import { Coffee } from "lucide-react";
+import { Wallet } from "lucide-react";
 import { Button } from "./button";
+import { useRouter } from "next/navigation";
 
 interface DonationButtonProps {
-    buyMeCoffeeUrl?: string;
-    variant?: "default" | "floating" | "minimal";
     className?: string;
+    variant?: "default" | "floating" | "minimal";
 }
 
 export function DonationButton({
-    buyMeCoffeeUrl = "https://buymeacoffee.com/shqipflix",
-    variant = "default",
     className = "",
+    variant = "default",
 }: DonationButtonProps) {
+    const router = useRouter();
+
     const handleClick = () => {
-        window.open(buyMeCoffeeUrl, "_blank");
+        router.push("/support");
     };
 
     if (variant === "floating") {
@@ -23,7 +24,7 @@ export function DonationButton({
             <button
                 onClick={handleClick}
                 className={`fixed bottom-6 right-6 z-40 group ${className}`}
-                aria-label="Support us on Buy Me a Coffee"
+                aria-label="Support ShqipFlix"
             >
                 <div className="relative">
                     {/* Glow Effect */}
@@ -31,7 +32,7 @@ export function DonationButton({
 
                     {/* Button */}
                     <div className="relative w-14 h-14 bg-gradient-to-br from-red-600 to-orange-500 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-                        <Coffee className="w-6 h-6 text-white" />
+                        <Wallet className="w-6 h-6 text-white" />
                     </div>
                 </div>
             </button>
@@ -44,7 +45,7 @@ export function DonationButton({
                 onClick={handleClick}
                 className={`inline-flex items-center gap-2 text-sm text-gray-400 hover:text-red-500 transition-colors ${className}`}
             >
-                <Coffee className="w-4 h-4" />
+                <Wallet className="w-4 h-4" />
                 <span>Support Us</span>
             </button>
         );
@@ -55,8 +56,8 @@ export function DonationButton({
             onClick={handleClick}
             className={`bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${className}`}
         >
-            <Coffee className="w-5 h-5 mr-2" />
-            Buy Me a Coffee
+            <Wallet className="w-5 h-5 mr-2" />
+            Support Us
         </Button>
     );
 }

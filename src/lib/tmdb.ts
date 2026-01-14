@@ -9,7 +9,7 @@ if (!TMDB_API_KEY) {
 
 import { prisma } from "@/lib/prisma";
 
-const fetchTMDB = async <T>(endpoint: string, params: Record<string, string> = {}): Promise<T> => {
+export const fetchTMDB = async <T>(endpoint: string, params: Record<string, string> = {}): Promise<T> => {
     // 1. Try fetching from DB if API Key is missing or if we want to prefer DB
     if (!TMDB_API_KEY) {
         console.warn(`[DB Mode] Fetching ${endpoint} (No API Key)`);

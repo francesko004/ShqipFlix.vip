@@ -75,7 +75,7 @@ export default async function NotificationsPage() {
                         <div className="bg-[#0b0c15] border border-white/5 rounded-xl p-12 text-center">
                             <Bell className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                             <h3 className="text-xl font-bold text-gray-400 mb-2">No notifications yet</h3>
-                            <p className="text-gray-500">We'll notify you when something important happens</p>
+                            <p className="text-gray-500">We&apos;ll notify you when something important happens</p>
                         </div>
                     ) : (
                         notifications.map((notification) => {

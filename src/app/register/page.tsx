@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { User, Lock, AlertCircle, Loader2 } from "lucide-react";
+import { validatePassword } from "@/lib/password-validation";
 
 export default function RegisterPage() {
     const [username, setUsername] = useState("");
@@ -23,8 +24,9 @@ export default function RegisterPage() {
             return;
         }
 
-        if (password.length < 6) {
-            setError("Password must be at least 6 characters");
+        const pwdValidation = validatePassword(password);
+        if (!pwdValidation.isValid) {
+            setError(pwdValidation.error || "Password does not meet requirements");
             return;
         }
 

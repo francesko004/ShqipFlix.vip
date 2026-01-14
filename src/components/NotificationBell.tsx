@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell, X, CheckCircle, Info, AlertTriangle, AlertCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 interface Notification {
@@ -19,11 +19,7 @@ export function NotificationBell({ userId }: { userId: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchNotifications();
-    }, [userId]);
-
-    async function fetchNotifications() {
+    const fetchNotifications = useCallback(async () => {
         try {
             const response = await fetch(`/api/notifications?userId=${userId}`);
             if (response.ok) {
@@ -36,7 +32,11 @@ export function NotificationBell({ userId }: { userId: string }) {
         } finally {
             setLoading(false);
         }
-    }
+    }, [userId]);
+
+    useEffect(() => {
+        fetchNotifications();
+    }, [fetchNotifications]);
 
     async function markAsRead(notificationId: string) {
         try {

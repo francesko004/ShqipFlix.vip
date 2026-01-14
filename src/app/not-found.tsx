@@ -50,7 +50,7 @@ export default function NotFound() {
                             Scene Not Found
                         </h2>
                         <p className="text-gray-300 text-lg sm:text-xl max-w-md mx-auto leading-relaxed">
-                            This page seems to have gone off-script. Let's get you back to the main feature.
+                            This page seems to have gone off-script. Let&apos;s get you back to the main feature.
                         </p>
                     </div>
                 </div>

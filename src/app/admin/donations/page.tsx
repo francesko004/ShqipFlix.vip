@@ -1,261 +1,326 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Coffee, Plus, Trash2, Edit2, Check, X, Eye, EyeOff } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Edit2, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
-interface Donation {
+interface CryptoAddress {
     id: string;
-    donorName: string;
-    amount: number;
-    message?: string;
+    name: string;
+    symbol: string;
+    address: string;
+    network: string | null;
     isVisible: boolean;
-    donatedAt: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
-interface Stats {
-    totalAmount: number;
-    totalDonors: number;
+interface FormData {
+    name: string;
+    symbol: string;
+    address: string;
+    network: string;
 }
 
 export default function AdminDonationsPage() {
-    const [donations, setDonations] = useState<Donation[]>([]);
-    const [stats, setStats] = useState<Stats>({ totalAmount: 0, totalDonors: 0 });
-    const [isLoading, setIsLoading] = useState(true);
-    const [isAdding, setIsAdding] = useState(false);
+    const [addresses, setAddresses] = useState<CryptoAddress[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
-
-    // Form State
-    const [formData, setFormData] = useState({
-        donorName: "",
-        amount: "",
-        message: "",
-        donatedAt: new Date().toISOString().split('T')[0]
+    const [formData, setFormData] = useState<FormData>({
+        name: "",
+        symbol: "",
+        address: "",
+        network: "",
     });
 
     useEffect(() => {
-        fetchDonations();
+        fetchAddresses();
     }, []);
 
-    const fetchDonations = async () => {
+    const fetchAddresses = async () => {
         try {
-            const response = await fetch("/api/admin/donations");
-            const data = await response.json();
-            setDonations(data.donations || []);
-            setStats(data.stats || { totalAmount: 0, totalDonors: 0 });
+            const res = await fetch("/api/admin/donations");
+            if (res.ok) {
+                const data = await res.json();
+                setAddresses(data);
+            }
         } catch (error) {
-            console.error("Error fetching donations:", error);
+            console.error("Failed to fetch addresses:", error);
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
         try {
+            const url = editingId 
+                ? `/api/admin/donations/${editingId}`
+                : "/api/admin/donations";
+            
             const method = editingId ? "PUT" : "POST";
-            const body = editingId ? { ...formData, id: editingId } : formData;
-
-            const response = await fetch("/api/admin/donations", {
+            
+            const res = await fetch(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
+                body: JSON.stringify(formData),
             });
 
-            if (response.ok) {
-                setIsAdding(false);
-                setEditingId(null);
-                setFormData({ donorName: "", amount: "", message: "", donatedAt: new Date().toISOString().split('T')[0] });
-                fetchDonations();
+            if (res.ok) {
+                await fetchAddresses();
+                resetForm();
+            } else {
+                alert("Failed to save crypto address");
             }
         } catch (error) {
-            console.error("Error saving donation:", error);
+            console.error("Error saving address:", error);
+            alert("An error occurred");
         }
     };
 
-    const handleToggleVisibility = async (id: string, currentVisible: boolean) => {
+    const handleEdit = (address: CryptoAddress) => {
+        setEditingId(address.id);
+        setFormData({
+            name: address.name,
+            symbol: address.symbol,
+            address: address.address,
+            network: address.network || "",
+        });
+        setShowForm(true);
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this crypto address?")) return;
+
         try {
-            await fetch("/api/admin/donations", {
+            const res = await fetch(`/api/admin/donations/${id}`, {
+                method: "DELETE",
+            });
+
+            if (res.ok) {
+                await fetchAddresses();
+            } else {
+                alert("Failed to delete address");
+            }
+        } catch (error) {
+            console.error("Error deleting address:", error);
+            alert("An error occurred");
+        }
+    };
+
+    const toggleVisibility = async (id: string, currentVisibility: boolean) => {
+        try {
+            const res = await fetch(`/api/admin/donations/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, isVisible: !currentVisible }),
+                body: JSON.stringify({ isVisible: !currentVisibility }),
             });
-            fetchDonations();
+
+            if (res.ok) {
+                await fetchAddresses();
+            }
         } catch (error) {
             console.error("Error toggling visibility:", error);
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this donation?")) return;
-        try {
-            await fetch(`/api/admin/donations?id=${id}`, { method: "DELETE" });
-            fetchDonations();
-        } catch (error) {
-            console.error("Error deleting donation:", error);
-        }
+    const resetForm = () => {
+        setFormData({ name: "", symbol: "", address: "", network: "" });
+        setShowForm(false);
+        setEditingId(null);
     };
 
-    const startEdit = (donation: Donation) => {
-        setEditingId(donation.id);
-        setFormData({
-            donorName: donation.donorName,
-            amount: donation.amount.toString(),
-            message: donation.message || "",
-            donatedAt: new Date(donation.donatedAt).toISOString().split('T')[0]
-        });
-        setIsAdding(true);
-    };
-
-    if (isLoading) return <div className="p-8 text-white">Loading...</div>;
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-gray-400">Loading...</div>
+            </div>
+        );
+    }
 
     return (
-        <div className="p-4 sm:p-8 space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-8">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
-                        <Coffee className="w-8 h-8 text-orange-500" />
-                        Donation Management
-                    </h1>
-                    <p className="text-gray-400 mt-1">Manage supporters and the hall of fame leaderboard.</p>
+                    <h2 className="text-2xl lg:text-3xl font-bold">Crypto Donations</h2>
+                    <p className="text-gray-500 text-sm mt-1">
+                        Manage cryptocurrency addresses for donations
+                    </p>
                 </div>
                 <Button
-                    onClick={() => { setIsAdding(!isAdding); setEditingId(null); }}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold"
+                    onClick={() => setShowForm(!showForm)}
+                    className="bg-red-600 hover:bg-red-700 text-white"
                 >
-                    {isAdding ? <X className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
-                    {isAdding ? "Cancel" : "Add Donation"}
+                    {showForm ? (
+                        <>
+                            <X className="w-4 h-4 mr-2" />
+                            Cancel
+                        </>
+                    ) : (
+                        <>
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Address
+                        </>
+                    )}
                 </Button>
             </div>
 
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-[#1a1a2e] border border-white/10 rounded-xl p-6">
-                    <p className="text-gray-400 text-sm">Total Revenue</p>
-                    <p className="text-3xl font-bold text-green-500">${stats.totalAmount.toFixed(2)}</p>
-                </div>
-                <div className="bg-[#1a1a2e] border border-white/10 rounded-xl p-6">
-                    <p className="text-gray-400 text-sm">Total Donors</p>
-                    <p className="text-3xl font-bold text-orange-500">{stats.totalDonors}</p>
-                </div>
-            </div>
-
             {/* Add/Edit Form */}
-            {isAdding && (
-                <form onSubmit={handleSubmit} className="bg-[#1a1a2e] border border-white/10 rounded-xl p-6 space-y-4">
-                    <h2 className="text-xl font-bold text-white mb-4">{editingId ? "Edit Donation" : "New Donation Entry"}</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm text-gray-400">Donor Name</label>
+            {showForm && (
+                <Card className="p-6 bg-white/5 border-white/10">
+                    <h3 className="text-xl font-bold mb-4">
+                        {editingId ? "Edit Crypto Address" : "Add New Crypto Address"}
+                    </h3>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-2">
+                                    Currency Name
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    placeholder="e.g., Bitcoin"
+                                    required
+                                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-red-600"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-2">
+                                    Symbol
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.symbol}
+                                    onChange={(e) => setFormData({ ...formData, symbol: e.target.value })}
+                                    placeholder="e.g., BTC"
+                                    required
+                                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-red-600"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">
+                                Wallet Address
+                            </label>
                             <input
                                 type="text"
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                placeholder="Enter wallet address"
                                 required
-                                value={formData.donorName}
-                                onChange={(e) => setFormData({ ...formData, donorName: e.target.value })}
-                                className="w-full bg-black/40 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-red-600"
-                                placeholder="John Doe"
+                                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-red-600 font-mono text-sm"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm text-gray-400">Amount ($)</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">
+                                Network (Optional)
+                            </label>
                             <input
-                                type="number"
-                                step="0.01"
-                                required
-                                value={formData.amount}
-                                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                                className="w-full bg-black/40 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-red-600"
-                                placeholder="5.00"
+                                type="text"
+                                value={formData.network}
+                                onChange={(e) => setFormData({ ...formData, network: e.target.value })}
+                                placeholder="e.g., ERC20, BEP20, TRC20"
+                                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:border-red-600"
                             />
                         </div>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm text-gray-400">Message (Optional)</label>
-                        <textarea
-                            value={formData.message}
-                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                            className="w-full bg-black/40 border border-white/10 rounded-lg p-2.5 text-white h-24 focus:outline-none focus:border-red-600"
-                            placeholder="Keep up the good work!"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm text-gray-400">Donated At</label>
-                        <input
-                            type="date"
-                            value={formData.donatedAt}
-                            onChange={(e) => setFormData({ ...formData, donatedAt: e.target.value })}
-                            className="w-full bg-black/40 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-red-600"
-                        />
-                    </div>
-                    <div className="flex justify-end gap-3">
-                        <Button type="button" variant="ghost" onClick={() => setIsAdding(false)}>Cancel</Button>
-                        <Button type="submit" className="bg-green-600 hover:bg-green-700">
-                            {editingId ? "Update Donation" : "Save Donation"}
-                        </Button>
-                    </div>
-                </form>
+                        <div className="flex gap-3 pt-2">
+                            <Button type="submit" className="bg-red-600 hover:bg-red-700">
+                                <Save className="w-4 h-4 mr-2" />
+                                {editingId ? "Update" : "Add"} Address
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={resetForm}
+                                className="bg-white/5 hover:bg-white/10"
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </form>
+                </Card>
             )}
 
-            {/* Donations Table */}
-            <div className="bg-[#1a1a2e] border border-white/10 rounded-xl overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="border-b border-white/10 bg-white/5">
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Donor</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Amount</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Date</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Visibility</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {donations.map((donation) => (
-                                <tr key={donation.id} className="hover:bg-white/[0.02] transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="text-white font-bold">{donation.donorName}</div>
-                                        {donation.message && <div className="text-xs text-gray-500 truncate max-w-xs">{donation.message}</div>}
-                                    </td>
-                                    <td className="px-6 py-4 text-green-500 font-bold">${donation.amount.toFixed(2)}</td>
-                                    <td className="px-6 py-4 text-gray-400 text-sm">
-                                        {new Date(donation.donatedAt).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <button
-                                            onClick={() => handleToggleVisibility(donation.id, donation.isVisible)}
-                                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${donation.isVisible ? "bg-green-500/10 text-green-500" : "bg-gray-500/10 text-gray-500"
-                                                }`}
+            {/* Addresses List */}
+            <div className="space-y-4">
+                {addresses.length === 0 ? (
+                    <Card className="p-12 text-center bg-white/5 border-white/10">
+                        <p className="text-gray-400">No crypto addresses added yet.</p>
+                        <p className="text-gray-600 text-sm mt-2">
+                            Click &quot;Add Address&quot; to create your first donation address.
+                        </p>
+                    </Card>
+                ) : (
+                    addresses.map((addr) => (
+                        <Card
+                            key={addr.id}
+                            className="p-6 bg-white/5 border-white/10 hover:border-red-600/30 transition-all"
+                        >
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                                <div className="flex-1 space-y-2">
+                                    <div className="flex items-center gap-3">
+                                        <h3 className="text-xl font-bold">{addr.name}</h3>
+                                        <span className="px-2 py-1 bg-red-600/20 text-red-500 text-xs font-bold rounded">
+                                            {addr.symbol}
+                                        </span>
+                                        {addr.network && (
+                                            <span className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">
+                                                {addr.network}
+                                            </span>
+                                        )}
+                                        <span
+                                            className={`px-2 py-1 text-xs font-bold rounded ${
+                                                addr.isVisible
+                                                    ? "bg-green-600/20 text-green-400"
+                                                    : "bg-gray-600/20 text-gray-400"
+                                            }`}
                                         >
-                                            {donation.isVisible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                                            {donation.isVisible ? "Visible" : "Hidden"}
-                                        </button>
-                                    </td>
-                                    <td className="px-6 py-4 text-right space-x-2">
-                                        <button
-                                            onClick={() => startEdit(donation)}
-                                            className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                                        >
-                                            <Edit2 className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(donation.id)}
-                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {donations.length === 0 && (
-                                <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500 italic">
-                                        No donation entries found. Add your first donor!
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                                            {addr.isVisible ? "Visible" : "Hidden"}
+                                        </span>
+                                    </div>
+                                    <p className="text-gray-400 font-mono text-sm break-all">
+                                        {addr.address}
+                                    </p>
+                                    <p className="text-gray-600 text-xs">
+                                        Added: {new Date(addr.createdAt).toLocaleDateString()}
+                                    </p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button
+                                        onClick={() => toggleVisibility(addr.id, addr.isVisible)}
+                                        className="bg-white/5 hover:bg-white/10"
+                                        size="sm"
+                                    >
+                                        {addr.isVisible ? (
+                                            <EyeOff className="w-4 h-4" />
+                                        ) : (
+                                            <Eye className="w-4 h-4" />
+                                        )}
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleEdit(addr)}
+                                        className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-400"
+                                        size="sm"
+                                    >
+                                        <Edit2 className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleDelete(addr.id)}
+                                        className="bg-red-600/20 hover:bg-red-600/30 text-red-400"
+                                        size="sm"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </Card>
+                    ))
+                )}
             </div>
         </div>
     );

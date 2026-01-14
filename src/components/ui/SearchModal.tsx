@@ -170,7 +170,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                 </div>
                             ) : (
                                 <div className="p-8 text-center text-gray-400">
-                                    No results found for "{query}"
+                                    No results found for &quot;{query}&quot;
                                 </div>
                             )}
                         </div>

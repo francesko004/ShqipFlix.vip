@@ -185,7 +185,7 @@ export default function ProfilePage() {
                                         </div>
                                     ) : (
                                         <div className="p-6 md:p-8 text-center border border-white/5 rounded-xl bg-white/5 text-gray-500">
-                                            You haven't watched anything yet.
+                                            You haven&apos;t watched anything yet.
                                         </div>
                                     )}
                                 </section>

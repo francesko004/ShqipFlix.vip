@@ -90,9 +90,11 @@ export function EpisodeSelector({ tvId, currentSeason, currentEpisode, totalSeas
                                     >
                                         <div className="relative w-16 sm:w-20 aspect-video rounded overflow-hidden flex-shrink-0 bg-black/40">
                                             {episode.still_path ? (
-                                                <img
+                                                <Image
                                                     src={`https://image.tmdb.org/t/p/w200${episode.still_path}`}
                                                     alt={episode.name}
+                                                    width={200}
+                                                    height={112}
                                                     className="w-full h-full object-cover"
                                                 />
                                             ) : (

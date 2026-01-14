@@ -51,7 +51,7 @@ export default function WatchlistPage() {
                             <Bookmark className="w-8 h-8 text-red-600" />
                             My List
                         </h1>
-                        <p className="text-gray-400 mt-2">Movies and TV shows you've saved to watch later.</p>
+                        <p className="text-gray-400 mt-2">Movies and TV shows you&apos;ve saved to watch later.</p>
                     </div>
                     {items.length > 0 && (
                         <div className="text-gray-400 text-sm font-medium bg-white/5 px-4 py-2 rounded-full">

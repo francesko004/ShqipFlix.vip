@@ -1,15 +1,22 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { DonationLeaderboard } from "@/components/ui/DonationLeaderboard";
-import { DonationButton } from "@/components/ui/DonationButton";
-import { Coffee, Heart, Star, ShieldCheck } from "lucide-react";
+import { Wallet, Heart, Star, ShieldCheck, Copy, Check } from "lucide-react";
+import { prisma } from "@/lib/prisma";
+import { CryptoAddressCard } from "@/components/ui/CryptoAddressCard";
 
 export const metadata = {
-    title: "Support ShqipFlix - Community Donation Leaderboard",
-    description: "Support ShqipFlix and help us maintain the ultimate Albanian streaming platform for everyone.",
+    title: "Support ShqipFlix - Crypto Donations",
+    description: "Support ShqipFlix and help us maintain the ultimate Albanian streaming platform with crypto donations.",
 };
 
-export default function SupportPage() {
+export const dynamic = "force-dynamic";
+
+export default async function SupportPage() {
+    const addresses = await prisma.cryptoAddress.findMany({
+        where: { isVisible: true },
+        orderBy: { createdAt: "asc" },
+    });
+
     return (
         <main className="min-h-screen bg-[#0b0c15] text-white">
             <Navbar />
@@ -27,19 +34,9 @@ export default function SupportPage() {
                     </h1>
 
                     <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-                        ShqipFlix is a community-driven project. Your donations help us cover server costs,
+                        ShqipFlix is a community-driven project. Your crypto donations help us cover server costs,
                         API fees, and continue developing new features for all Albanian movie lovers.
                     </p>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                        <DonationButton className="w-full sm:w-auto px-8 py-4 text-lg" />
-                        <a
-                            href="#leaderboard"
-                            className="w-full sm:w-auto px-8 py-4 text-lg border border-white/10 rounded-xl hover:bg-white/5 transition-colors text-center font-bold"
-                        >
-                            View Leaderboard
-                        </a>
-                    </div>
                 </div>
 
                 {/* Benefits/Why Support */}
@@ -55,29 +52,39 @@ export default function SupportPage() {
                         description="Help us keep the core experience clean and focused on content."
                     />
                     <BenefitCard
-                        icon={<Coffee className="w-6 h-6 text-orange-500" />}
-                        title="Fuel Developers"
-                        description="Support the team working hard to bring you the best features."
+                        icon={<Wallet className="w-6 h-6 text-orange-500" />}
+                        title="Crypto Powered"
+                        description="Support us anonymously and securely using your favorite cryptocurrencies."
                     />
                 </div>
 
-                {/* Leaderboard Section */}
-                <section id="leaderboard" className="space-y-12">
+                {/* Crypto Options Section */}
+                <section id="crypto-options" className="space-y-12 max-w-4xl mx-auto">
                     <div className="text-center space-y-4">
-                        <h2 className="text-3xl md:text-4xl font-bold">Hall of Fame</h2>
-                        <p className="text-gray-500">A special thank you to our top supporters who make this possible.</p>
+                        <h2 className="text-3xl md:text-4xl font-bold">Donate with Crypto</h2>
+                        <p className="text-gray-500">Choose your preferred currency to send your support.</p>
                     </div>
 
-                    <DonationLeaderboard />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {addresses.length > 0 ? (
+                            addresses.map((addr) => (
+                                <CryptoAddressCard key={addr.id} address={addr} />
+                            ))
+                        ) : (
+                            <div className="col-span-1 md:col-span-2 text-center py-12 bg-white/5 rounded-2xl border border-white/10 text-gray-400">
+                                <Wallet className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+                                <p>No crypto addresses are currently available. Please check back later.</p>
+                            </div>
+                        )}
+                    </div>
                 </section>
 
                 {/* FAQ/Note */}
                 <div className="mt-32 max-w-3xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
-                    <h3 className="text-xl font-bold mb-4">Donation Information</h3>
+                    <h3 className="text-xl font-bold mb-4">Important Information</h3>
                     <p className="text-gray-400 text-sm leading-relaxed">
-                        All donations are processed securely via Buy Me a Coffee. Once you donate, if you'd like your name
-                        to appear on this leaderboard, please make sure your donation is public or contact our support.
-                        Donations are voluntary and non-refundable. Thank you for your amazing support!
+                        Please ensure you select the correct network when sending crypto.
+                        Donations are voluntary and non-refundable. Your support keeps ShqipFlix alive!
                     </p>
                 </div>
             </div>

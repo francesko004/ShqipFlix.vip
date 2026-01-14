@@ -13,19 +13,18 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 if (!credentials?.username || !credentials?.password) {
-                    throw new Error("Missing username or password");
+                    throw new Error("Invalid credentials");
                 }
 
                 const username = credentials.username.trim();
-                console.log(`[Auth] Attempting login for user: ${username}`);
 
                 const user = await prisma.user.findUnique({
                     where: { username }
                 });
 
                 if (!user) {
-                    console.log(`[Auth] User not found: ${username}`);
-                    throw new Error("User not found");
+                    // Generic error to prevent account enumeration
+                    throw new Error("Invalid credentials");
                 }
 
                 const isPasswordValid = await bcrypt.compare(
@@ -34,45 +33,39 @@ export const authOptions: NextAuthOptions = {
                 );
 
                 if (!isPasswordValid) {
-                    console.log(`[Auth] Invalid password for user: ${username}`);
-                    throw new Error("Invalid password");
+                    throw new Error("Invalid credentials");
                 }
-
-                console.log(`[Auth] Login successful for user: ${username}`);
 
                 return {
                     id: user.id,
                     username: user.username,
-                    role: user.role,
-                } as any;
+                    role: user.role as "USER" | "ADMIN",
+                };
             }
         })
     ],
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = (user as any).id;
-                token.username = (user as any).username;
-                token.role = (user as any).role;
+                token.id = user.id;
+                token.username = user.username;
+                token.role = user.role;
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user) {
-                (session.user as any).id = token.id;
-                (session.user as any).username = token.username;
-                (session.user as any).role = token.role;
+                session.user.id = token.id;
+                session.user.username = token.username;
+                session.user.role = token.role;
             }
             return session;
         },
         async redirect({ url, baseUrl }) {
-            // Handle signout redirect
             if (url.startsWith('/api/auth/signout')) {
                 return baseUrl;
             }
-            // Allows relative callback URLs
             if (url.startsWith("/")) return `${baseUrl}${url}`;
-            // Allows callback URLs on the same origin
             else if (new URL(url).origin === baseUrl) return url;
             return baseUrl;
         }
@@ -82,7 +75,12 @@ export const authOptions: NextAuthOptions = {
         signOut: "/",
     },
     session: {
-        strategy: "jwt"
+        strategy: "jwt",
+        maxAge: 7 * 24 * 60 * 60, // 7 days
+        updateAge: 24 * 60 * 60, // 1 day
+    },
+    jwt: {
+        maxAge: 7 * 24 * 60 * 60,
     },
     secret: process.env.NEXTAUTH_SECRET,
 };
