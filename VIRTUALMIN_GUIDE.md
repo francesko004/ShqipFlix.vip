@@ -6,7 +6,7 @@ This guide covers the specific steps to host ShqipFlix on your Virtualmin server
 
 1.  **Virtualmin Server**: Ensure you have a virtual server created for your domain.
 2.  **Node.js**: Install Node.js (v18 or higher).
-3.  **MariaDB/MySQL**: Ensure MariaDB is installed and running on your server.
+3.  **PostgreSQL**: Ensure PostgreSQL is installed and running on your server.
 4.  **PM2**: Install PM2 globally: `npm install -g pm2`.
 5.  **Upstash Redis**: An account and a database created at [upstash.com](https://upstash.com).
 
@@ -14,7 +14,7 @@ This guide covers the specific steps to host ShqipFlix on your Virtualmin server
 
 1.  Go to **Virtualmin** -> **Edit Databases**.
 2.  Click **Create a new database**.
-3.  Choose **MySQL** as the type (which is used for MariaDB).
+3.  Choose **PostgreSQL** as the type.
 4.  Name it `shqipflix`.
 5.  Virtualmin automatically creates a user with permissions for this database. Note down the credentials.
 
@@ -40,7 +40,7 @@ Update the following variables:
 
 ```env
 # Database
-DATABASE_URL="mysql://username:password@localhost:3306/shqipflix"
+POSTGRES_PRISMA_URL="postgresql://username:password@localhost:5432/shqipflix"
 
 # NextAuth
 NEXTAUTH_URL="https://yourdomain.com"
