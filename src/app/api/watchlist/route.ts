@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
         const watchlistItem = await prisma.watchlistItem.create({
             data: {
-                userId: (session.user as any).id,
+                userId: session.user.id,
                 tmdbId: parseInt(tmdbId),
                 title,
                 posterPath,
@@ -40,7 +40,7 @@ export async function DELETE(req: Request) {
         await prisma.watchlistItem.delete({
             where: {
                 userId_tmdbId_mediaType: {
-                    userId: (session.user as any).id,
+                    userId: session.user.id,
                     tmdbId: parseInt(tmdbId),
                     mediaType,
                 }
@@ -61,7 +61,7 @@ export async function GET() {
         }
 
         const list = await prisma.watchlistItem.findMany({
-            where: { userId: (session.user as any).id },
+            where: { userId: session.user.id },
             orderBy: { createdAt: "desc" },
         });
 

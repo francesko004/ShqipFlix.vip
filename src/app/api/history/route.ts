@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         const historyItem = await prisma.historyItem.upsert({
             where: {
                 userId_tmdbId_mediaType: {
-                    userId: (session.user as any).id,
+                    userId: session.user.id,
                     tmdbId: parseInt(tmdbId),
                     mediaType,
                 }
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
                 progress: progress || 0,
             },
             create: {
-                userId: (session.user as any).id,
+                userId: session.user.id,
                 tmdbId: parseInt(tmdbId),
                 title,
                 posterPath,
@@ -53,7 +53,7 @@ export async function GET() {
         }
 
         const history = await prisma.historyItem.findMany({
-            where: { userId: (session.user as any).id },
+            where: { userId: session.user.id },
             orderBy: { lastWatched: "desc" },
             take: 20,
         });
