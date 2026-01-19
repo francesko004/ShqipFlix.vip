@@ -21,9 +21,9 @@ export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlay
     }).toString();
 
     if (type === "movie") {
-        src = `https://vidking.net/embed/movie/${tmdbId}?${themeParams}`;
+        src = `https://vidsrc.xyz/embed/movie/${tmdbId}`;
     } else {
-        src = `https://vidking.net/embed/tv/${tmdbId}/${season}/${episode}?${themeParams}`;
+        src = `https://vidsrc.xyz/embed/tv/${tmdbId}/${season}/${episode}`;
     }
 
     return (
