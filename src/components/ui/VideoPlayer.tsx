@@ -17,7 +17,7 @@ export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlay
         primaryColor: "dc2626", // Alternate parameter name
         secondaryColor: "0b0c15", // Site background color
         iconColor: "ffffff",
-        autoplay: "0",
+        autoplay: "1",
     }).toString();
 
     if (type === "movie") {
@@ -35,7 +35,7 @@ export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlay
                     className="w-full h-full"
                     allowFullScreen
                     allow="autoplay; encrypted-media"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media allow-popups"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media"
                     frameBorder="0"
                 />
             </div>
