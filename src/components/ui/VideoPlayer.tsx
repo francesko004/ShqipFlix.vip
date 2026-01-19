@@ -21,9 +21,9 @@ export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlay
     }).toString();
 
     if (type === "movie") {
-        src = `https://vidsrc.xyz/embed/movie/${tmdbId}`;
+        src = `https://vidking.net/embed/movie/${tmdbId}?${themeParams}`;
     } else {
-        src = `https://vidsrc.xyz/embed/tv/${tmdbId}/${season}/${episode}`;
+        src = `https://vidking.net/embed/tv/${tmdbId}/${season}/${episode}?${themeParams}`;
     }
 
     return (
@@ -35,7 +35,7 @@ export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlay
                     className="w-full h-full"
                     allowFullScreen
                     allow="autoplay; encrypted-media"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media allow-popups"
                     frameBorder="0"
                 />
             </div>
