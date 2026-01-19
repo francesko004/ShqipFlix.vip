@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import {
     Users,
     Film,
@@ -6,7 +7,8 @@ import {
     TrendingUp,
     Plus,
     MoreVertical,
-    Activity
+    Activity,
+    Tv
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ContentRefreshButton } from "@/components/admin/ContentRefreshButton";
@@ -18,6 +20,7 @@ export default async function AdminDashboard() {
     const watchlistCount = await prisma.watchlistItem.count();
     const historyCount = await prisma.historyItem.count();
     const mediaCount = await prisma.mediaContent.count();
+    const liveChannelCount = await (prisma as any).liveChannel.count();
 
     // Get recent users
     const recentUsers = await prisma.user.findMany({
@@ -27,8 +30,8 @@ export default async function AdminDashboard() {
 
     const stats = [
         { label: "Total Users", value: userCount, icon: Users, color: "blue" },
-        { label: "Total Movies", value: mediaCount, icon: Film, color: "purple" },
-        { label: "Watchlist Items", value: watchlistCount, icon: TrendingUp, color: "green" },
+        { label: "Movies & TV", value: mediaCount, icon: Film, color: "purple" },
+        { label: "Live Channels", value: liveChannelCount, icon: Tv, iconColor: "text-red-500", color: "red" },
         { label: "Total Views", value: historyCount, icon: Eye, color: "red" },
     ];
 
@@ -80,13 +83,17 @@ export default async function AdminDashboard() {
                 <div className="bg-[#0b0c15] border border-white/5 rounded-2xl p-4 lg:p-6">
                     <h2 className="text-lg lg:text-xl font-bold mb-4 lg:mb-6">Quick Actions</h2>
                     <div className="space-y-3">
-                        <Button className="w-full justify-start gap-3 bg-red-600 hover:bg-red-700 h-11 lg:h-12 rounded-xl shadow-lg shadow-red-900/10 text-sm lg:text-base">
-                            <Plus className="w-4 h-4 lg:w-5 lg:h-5" />
-                            Add Featured Movie
+                        <Button className="w-full justify-start gap-3 bg-red-600 hover:bg-red-700 h-11 lg:h-12 rounded-xl shadow-lg shadow-red-900/10 text-sm lg:text-base" asChild>
+                            <Link href="/admin/channels">
+                                <Tv className="w-4 h-4 lg:w-5 lg:h-5" />
+                                Manage Live Channels
+                            </Link>
                         </Button>
-                        <Button variant="outline" className="w-full justify-start gap-3 bg-white/5 border-white/10 h-11 lg:h-12 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 text-sm lg:text-base">
-                            <ShieldAlert className="w-4 h-4 lg:w-5 lg:h-5" />
-                            Ban Malicious User
+                        <Button variant="outline" className="w-full justify-start gap-3 bg-white/5 border-white/10 h-11 lg:h-12 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 text-sm lg:text-base" asChild>
+                            <Link href="/admin/content">
+                                <Film className="w-4 h-4 lg:w-5 lg:h-5" />
+                                Content Management
+                            </Link>
                         </Button>
                         <ContentRefreshButton />
                     </div>
