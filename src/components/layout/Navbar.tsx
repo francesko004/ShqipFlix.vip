@@ -24,6 +24,7 @@ export function Navbar() {
         { href: "/", label: "Home" },
         { href: "/movies", label: "Movies" },
         { href: "/tv", label: "TV Shows" },
+        { href: "/live", label: "Live TV" },
         { href: "/new", label: "New & Popular" },
         { href: "/watchlist", label: "My List" },
     ];
