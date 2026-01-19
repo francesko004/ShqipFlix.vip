@@ -20,6 +20,8 @@ module.exports = {
         max_restarts: 10,
         min_uptime: '10s',
         listen_timeout: 10000,
-        kill_timeout: 5000
+        kill_timeout: 5000,
+        exp_backoff_restart_delay: 100,
+        node_args: '--max-old-space-size=4096'
     }]
 };

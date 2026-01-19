@@ -35,7 +35,7 @@ export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlay
                     className="w-full h-full"
                     allowFullScreen
                     allow="autoplay; encrypted-media"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media allow-popups allow-popups-to-escape-sandbox"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media"
                     frameBorder="0"
                 />
             </div>
