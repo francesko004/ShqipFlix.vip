@@ -21,10 +21,20 @@ export function VideoPlayer({ tmdbId, type, season, episode }: VideoPlayerProps)
 
     // Construct embed URL based on type
     let embedUrl = "";
+
+    // Customization parameters to match ShqipFlix theme
+    const themeParams = new URLSearchParams({
+        color: "dc2626", // Red-600 to match site accent
+        primaryColor: "dc2626", // Alternate parameter name
+        secondaryColor: "0b0c15", // Site background color
+        iconColor: "ffffff",
+        autoplay: "0",
+    }).toString();
+
     if (type === "movie") {
-        embedUrl = `https://vidsrc.xyz/embed/movie/${tmdbId}`;
+        embedUrl = `https://vidking.net/embed/movie/${tmdbId}?${themeParams}`;
     } else if (type === "tv" && season && episode) {
-        embedUrl = `https://vidsrc.xyz/embed/tv/${tmdbId}/${season}/${episode}`;
+        embedUrl = `https://vidking.net/embed/tv/${tmdbId}/${season}/${episode}?${themeParams}`;
     }
 
     return (
