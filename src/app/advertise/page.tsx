@@ -53,7 +53,7 @@ export default function AdvertisePage() {
                         </div>
                         <h1 className="text-4xl font-bold text-white mb-4">Reklama u Dërgua!</h1>
                         <p className="text-gray-400 mb-8">
-                            Faleminderit për interesin! Ekipi ynë do ta shqyrtojë reklamën tuaj dhe do t'ju kontaktojë së shpejti.
+                            Faleminderit për interesin! Ekipi ynë do ta shqyrtojë reklamën tuaj dhe do t&apos;ju kontaktojë së shpejti.
                         </p>
                         <Button
                             onClick={() => router.push("/")}
@@ -166,7 +166,7 @@ export default function AdvertisePage() {
 
                         <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                             <p className="text-sm text-blue-400">
-                                <strong>Shënim:</strong> Reklama juaj do të shqyrtohet nga ekipi ynë brenda 24 orëve. Do t'ju kontaktojmë për detajet e pagesës.
+                                <strong>Shënim:</strong> Reklama juaj do të shqyrtohet nga ekipi ynë brenda 24 orëve. Do t&apos;ju kontaktojmë për detajet e pagesës.
                             </p>
                         </div>
 

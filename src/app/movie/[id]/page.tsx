@@ -77,10 +77,10 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
 
                         <div className="space-y-4">
                             <h1 className="text-4xl font-bold text-white">{movie.title || movie.name}</h1>
-                            <div className="flex items-center gap-4 text-sm text-gray-400">
+                            <div className="flex items-center flex-wrap gap-4 text-sm text-gray-400">
                                 <span>{movie.release_date ? new Date(movie.release_date).getFullYear() : "N/A"}</span>
                                 <span>{movie.runtime || 0} min</span>
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2">
                                     {(movie.genres || []).map(g => (
                                         <span key={g.id} className="border border-white/20 px-2 rounded-full text-xs flex items-center">{g.name}</span>
                                     ))}

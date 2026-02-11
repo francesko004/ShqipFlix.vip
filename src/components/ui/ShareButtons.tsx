@@ -20,7 +20,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
     };
 
     const handleNativeShare = async () => {
-        if (navigator.share) {
+        if (typeof navigator.share === 'function') {
             try {
                 await navigator.share({
                     title,
@@ -75,7 +75,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
             </Button>
 
             {/* Native Share (mobile) */}
-            {typeof window !== "undefined" && navigator.share && (
+            {typeof window !== "undefined" && typeof navigator.share === 'function' && (
                 <Button
                     variant="ghost"
                     size="icon"

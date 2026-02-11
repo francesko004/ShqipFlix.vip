@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MediaItem } from "@/types/tmdb";
@@ -15,6 +15,8 @@ interface HeroSliderProps {
 export function HeroSlider({ items }: HeroSliderProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+    const touchStartX = useRef(0);
+    const touchEndX = useRef(0);
 
     const nextSlide = useCallback(() => {
         setCurrentIndex((prev) => (prev + 1) % items.length);
@@ -40,6 +42,28 @@ export function HeroSlider({ items }: HeroSliderProps) {
         return () => clearInterval(interval);
     }, [isAutoPlaying, items.length, nextSlide]);
 
+    // Touch swipe handlers
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.targetTouches[0].clientX;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        touchEndX.current = e.targetTouches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        const diff = touchStartX.current - touchEndX.current;
+        const threshold = 50; // minimum swipe distance in px
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                nextSlide(); // swipe left → next
+            } else {
+                prevSlide(); // swipe right → prev
+            }
+            setIsAutoPlaying(false);
+        }
+    };
+
     if (!items || items.length === 0) return null;
 
     const currentItem = items[currentIndex];
@@ -49,7 +73,12 @@ export function HeroSlider({ items }: HeroSliderProps) {
     const link = currentItem.media_type === "tv" ? `/tv/${currentItem.id}` : `/movie/${currentItem.id}`;
 
     return (
-        <section className="relative min-h-[60vh] md:min-h-[70vh] lg:h-[85vh] w-full items-center flex overflow-hidden">
+        <section
+            className="relative min-h-[60vh] md:min-h-[70vh] lg:h-[85vh] w-full items-center flex overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
             {/* Background Image with Transition */}
             <div className="absolute inset-0">
                 {items.map((item, index) => (
@@ -154,8 +183,8 @@ export function HeroSlider({ items }: HeroSliderProps) {
                             key={index}
                             onClick={() => goToSlide(index)}
                             className={`transition-all ${index === currentIndex
-                                    ? "w-8 md:w-10 bg-white"
-                                    : "w-2 md:w-3 bg-white/50 hover:bg-white/75"
+                                ? "w-8 md:w-10 bg-white"
+                                : "w-2 md:w-3 bg-white/50 hover:bg-white/75"
                                 } h-1 md:h-1.5 rounded-full`}
                             aria-label={`Go to slide ${index + 1}`}
                         />

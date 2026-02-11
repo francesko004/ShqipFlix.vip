@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -13,12 +13,32 @@ export function Navbar() {
     const { data: session, status } = useSession();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const pathname = usePathname();
 
     const isActive = (path: string) => {
         if (path === "/") return pathname === "/";
         return pathname.startsWith(path);
     };
+
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        if (isDropdownOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isDropdownOpen]);
+
+    // Close dropdown on route change
+    useEffect(() => {
+        setIsDropdownOpen(false);
+    }, [pathname]);
 
     const navLinks = [
         { href: "/", label: "Home" },
@@ -64,20 +84,21 @@ export function Navbar() {
                         </Button>
 
                         {session ? (
-                            <div className="flex items-center gap-4">
-                                <div className="hidden sm:flex">
-                                    <NotificationBell userId={session.user.id} />
-                                </div>
+                            <div className="flex items-center gap-2 md:gap-4">
+                                <NotificationBell userId={session.user.id} />
 
-                                <div className="relative group">
-                                    <button className="flex items-center gap-2 p-1 rounded-full hover:bg-white/10 transition-colors">
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-500 flex items-center justify-center text-xs font-bold text-white shadow-lg ring-2 ring-white/10 group-hover:ring-red-600/50 transition-all">
+                                <div className="relative" ref={dropdownRef}>
+                                    <button
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                        className="flex items-center gap-2 p-1 rounded-full hover:bg-white/10 transition-colors"
+                                    >
+                                        <div className={`w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-500 flex items-center justify-center text-xs font-bold text-white shadow-lg ring-2 transition-all ${isDropdownOpen ? 'ring-red-600/50' : 'ring-white/10 hover:ring-red-600/50'}`}>
                                             {session.user.username.substring(0, 2).toUpperCase()}
                                         </div>
                                     </button>
 
-                                    {/* Custom Dropdown */}
-                                    <div className="absolute right-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0 z-[60]">
+                                    {/* Click-Toggle Dropdown */}
+                                    <div className={`absolute right-0 mt-2 w-56 transition-all duration-200 z-[60] ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
                                         <div className="bg-[#1a1a2e]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden p-1">
                                             <div className="px-3 py-3 border-b border-white/5">
                                                 <p className="text-white font-bold truncate">{session.user.username}</p>
@@ -121,7 +142,7 @@ export function Navbar() {
                                 </Button>
                                 <Link
                                     href="/login"
-                                    className="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+                                    className="sm:hidden p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
                                     title="Log in to view profile"
                                 >
                                     <UserIcon className="w-6 h-6" />
@@ -195,6 +216,14 @@ export function Navbar() {
                                             </div>
                                             <span className="font-bold">{session.user.username}</span>
                                         </Link>
+                                        <Link
+                                            href="/notifications"
+                                            className="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                        >
+                                            <Bell className="w-5 h-5" />
+                                            <span className="font-bold">Notifications</span>
+                                        </Link>
                                         <button
                                             onClick={() => {
                                                 signOut();
@@ -233,4 +262,3 @@ export function Navbar() {
         </>
     );
 }
-
