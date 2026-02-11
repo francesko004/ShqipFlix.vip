@@ -10,8 +10,32 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "ShqipFlix - Watch Movies & TV Shows",
-  description: "Stream your favorite movies and TV shows on ShqipFlix.",
+  title: "ShqipFlix - Shiko Filma dhe Seriale Shqip Falas",
+  description: "Platforma më e mirë shqiptare për të parë filma dhe seriale online falas. Përmbajtje HD, pa reklama të padëshiruara. Shiko tani!",
+  keywords: ["filma shqip", "seriale shqip", "streaming shqip", "shqipflix", "filma online", "seriale online", "hd streaming"],
+  authors: [{ name: "ShqipFlix" }],
+  openGraph: {
+    type: "website",
+    locale: "sq_AL",
+    url: "https://shqipflix.vip",
+    siteName: "ShqipFlix",
+    title: "ShqipFlix - Shiko Filma dhe Seriale Shqip Falas",
+    description: "Platforma më e mirë shqiptare për të parë filma dhe seriale online falas. Përmbajtje HD, pa reklama të padëshiruara.",
+    images: [
+      {
+        url: "/favicon.png",
+        width: 1200,
+        height: 630,
+        alt: "ShqipFlix - Streaming Platform",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ShqipFlix - Shiko Filma dhe Seriale Shqip Falas",
+    description: "Platforma më e mirë shqiptare për të parë filma dhe seriale online falas.",
+    images: ["/favicon.png"],
+  },
   icons: {
     icon: [
       { url: "/favicon.png", sizes: "any" },
@@ -20,6 +44,7 @@ export const metadata: Metadata = {
     ],
     apple: "/favicon.png",
   },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -28,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="sq">
       <body className={`${inter.variable} ${outfit.variable} font-sans pb-16 md:pb-0`}>
         <Providers>
           {children}

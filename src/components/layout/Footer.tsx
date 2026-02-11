@@ -31,12 +31,14 @@ export function Footer() {
                             <li><FooterLink href="/movies">Movies</FooterLink></li>
                             <li><FooterLink href="/tv">TV Shows</FooterLink></li>
                             <li><FooterLink href="/new">New & Popular</FooterLink></li>
+                            <li><FooterLink href="/request">Request Movie</FooterLink></li>
                         </ul>
                     </div>
 
                     <div className="lg:col-span-2 md:col-span-1">
                         <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Community</h4>
                         <ul className="space-y-4 text-sm text-gray-400">
+                            <li><FooterLink href="/advertise">Advertise with Us</FooterLink></li>
                             <li><FooterLink href="/support">Support Us</FooterLink></li>
                             <li><FooterLink href="/support">Crypto Donations</FooterLink></li>
                         </ul>

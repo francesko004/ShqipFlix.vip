@@ -8,6 +8,10 @@ import { TrailerButton } from "@/components/ui/TrailerButton";
 import { CastRow } from "@/components/ui/CastRow";
 import { WatchTracker } from "@/components/ui/WatchTracker";
 import { DonationButton } from "@/components/ui/DonationButton";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { ShareButtons } from "@/components/ui/ShareButtons";
+import { BackToTop } from "@/components/ui/BackToTop";
+import { ReviewSection } from "@/components/ui/ReviewSection";
 import { tmdb } from "@/lib/tmdb";
 import Link from "next/link";
 import Image from "next/image";
@@ -48,6 +52,7 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
 
     return (
         <main className="min-h-screen bg-[#0b0c15]">
+            <JsonLd tv={tv} />
             <Navbar />
             <WatchTracker item={tv} />
 
@@ -72,6 +77,7 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                             <WatchlistButton item={tv} />
                             <TrailerButton videos={tv.videos?.results || []} />
+                            <ShareButtons title={tv.name || tv.title || "TV Show"} />
 
                             {episodes.length > 0 && (
                                 episodeNumber < episodes[episodes.length - 1].episode_number ? (
@@ -132,8 +138,13 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                 <div className="mt-12 sm:mt-14 md:mt-16">
                     <ContentRow title="You May Also Like" items={tv.similar?.results || []} />
                 </div>
+
+                <div className="mt-16">
+                    <ReviewSection tmdbId={tv.id} mediaType="tv" />
+                </div>
             </div>
 
+            <BackToTop />
             <Footer />
         </main>
     );

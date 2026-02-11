@@ -5,6 +5,8 @@ import { ContentRow } from "@/components/ui/ContentRow";
 import { WatchlistRow } from "@/components/ui/WatchlistRow";
 import { HistoryRow } from "@/components/ui/HistoryRow";
 import { RecommendationRow } from "@/components/ui/RecommendationRow";
+import { ContinueWatchingRow } from "@/components/ui/ContinueWatchingRow";
+import { BackToTop } from "@/components/ui/BackToTop";
 import { tmdb } from "@/lib/tmdb";
 
 export default async function Home() {
@@ -41,6 +43,7 @@ export default async function Home() {
       {heroItems.length > 0 && <HeroSlider items={heroItems} />}
 
       <div className="container mx-auto px-4 -mt-20 md:-mt-32 relative z-20 space-y-12">
+        <ContinueWatchingRow />
         <HistoryRow />
         <RecommendationRow />
         <WatchlistRow />
@@ -56,6 +59,7 @@ export default async function Home() {
         <ContentRow title="All Popular" items={popularMovies?.results || []} />
       </div>
 
+      <BackToTop />
       <Footer />
     </main>
   );

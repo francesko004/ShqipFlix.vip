@@ -20,6 +20,8 @@ model User {
   watchlist     WatchlistItem[]
   history       HistoryItem[]
   notifications Notification[]
+  reviews       Review[]
+  requests      MovieRequest[]
 }
 
 model WatchlistItem {
@@ -122,3 +124,59 @@ model LiveChannel {
 
   @@index([category])
 }
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  tmdbId    Int
+  mediaType String   // "movie" or "tv"
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, tmdbId, mediaType])
+  @@index([tmdbId, mediaType])
+}
+
+model MovieRequest {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED, ADDED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([status])
+  @@index([createdAt])
+}
+
+model BumperAd {
+  id           String   @id @default(cuid())
+  advertiser   String   // Business name
+  contactEmail String
+  mediaUrl     String   // Video or image URL
+  clickUrl     String?  // Where to redirect on click
+  duration     Int      @default(5) // Seconds
+  impressions  Int      @default(0)
+  clicks       Int      @default(0)
+  isActive     Boolean  @default(false) // Admin approval required
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@index([isActive])
+}
+
+model Genre {
+  id       Int    @id // TMDB genre ID
+  name     String
+  slug     String @unique
+  
+  @@index([slug])
+}
+

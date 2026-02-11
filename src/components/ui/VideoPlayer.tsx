@@ -1,6 +1,7 @@
 "use client";
 
-import { AdBlockWarning } from "@/components/ui/AdBlockWarning";
+import { useState } from "react";
+import { BumperPlayer } from "@/components/ui/BumperPlayer";
 
 interface VideoPlayerProps {
     tmdbId: number;
@@ -9,36 +10,42 @@ interface VideoPlayerProps {
     episode?: number;
 }
 
-export function VideoPlayer({ tmdbId, type, season = 1, episode = 1 }: VideoPlayerProps) {
-    let src = "";
-    // Customization parameters to match ShqipFlix theme
-    const themeParams = new URLSearchParams({
-        color: "dc2626", // Red-600 to match site accent
-        primaryColor: "dc2626", // Alternate parameter name
-        secondaryColor: "0b0c15", // Site background color
-        iconColor: "ffffff",
-        autoplay: "1",
-    }).toString();
+export function VideoPlayer({ tmdbId, type, season, episode }: VideoPlayerProps) {
+    const [showBumper, setShowBumper] = useState(true);
+    const [videoStarted, setVideoStarted] = useState(false);
 
+    const handleBumperComplete = () => {
+        setShowBumper(false);
+        setVideoStarted(true);
+    };
+
+    // Construct embed URL based on type
+    let embedUrl = "";
     if (type === "movie") {
-        src = `https://vidking.net/embed/movie/${tmdbId}?${themeParams}`;
-    } else {
-        src = `https://vidking.net/embed/tv/${tmdbId}/${season}/${episode}?${themeParams}`;
+        embedUrl = `https://vidsrc.xyz/embed/movie/${tmdbId}`;
+    } else if (type === "tv" && season && episode) {
+        embedUrl = `https://vidsrc.xyz/embed/tv/${tmdbId}/${season}/${episode}`;
     }
 
     return (
-        <div className="w-full relative z-20">
-            <AdBlockWarning />
-            <div className="w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl shadow-red-900/10 border border-white/10">
+        <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
+            {showBumper && <BumperPlayer onComplete={handleBumperComplete} />}
+
+            {videoStarted && embedUrl && (
                 <iframe
-                    src={src}
+                    src={embedUrl}
                     className="w-full h-full"
                     allowFullScreen
-                    allow="autoplay; encrypted-media"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media"
-                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    title="Video Player"
                 />
-            </div>
+            )}
+
+            {!videoStarted && !showBumper && (
+                <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <p>Loading player...</p>
+                </div>
+            )}
         </div>
     );
 }

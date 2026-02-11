@@ -7,6 +7,10 @@ import { TrailerButton } from "@/components/ui/TrailerButton";
 import { CastRow } from "@/components/ui/CastRow";
 import { WatchTracker } from "@/components/ui/WatchTracker";
 import { DonationButton } from "@/components/ui/DonationButton";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { ShareButtons } from "@/components/ui/ShareButtons";
+import { BackToTop } from "@/components/ui/BackToTop";
+import { ReviewSection } from "@/components/ui/ReviewSection";
 import { tmdb } from "@/lib/tmdb";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -41,6 +45,7 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
 
     return (
         <main className="min-h-screen bg-[#0b0c15]">
+            <JsonLd movie={movie} />
             <Navbar />
             <WatchTracker item={movie} />
 
@@ -67,6 +72,7 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
                         <div className="flex flex-wrap items-center gap-4">
                             <WatchlistButton item={movie} />
                             <TrailerButton videos={movie.videos?.results || []} />
+                            <ShareButtons title={movie.title || movie.name || "Movie"} />
                         </div>
 
                         <div className="space-y-4">
@@ -87,6 +93,10 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
                     </div>
                 </div>
 
+                <div className="mt-16">
+                    <ReviewSection tmdbId={movie.id} mediaType="movie" />
+                </div>
+
                 <div className="mt-16 bg-[#1a1a2e]/40 backdrop-blur-md border border-white/5 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="space-y-2 text-center md:text-left">
                         <h3 className="text-xl font-bold text-white">Enjoying this movie?</h3>
@@ -100,6 +110,7 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
                 </div>
             </div>
 
+            <BackToTop />
             <Footer />
         </main>
     );
