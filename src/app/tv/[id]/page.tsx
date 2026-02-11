@@ -101,13 +101,15 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                         </div>
 
                         {/* Enhanced Episode Selector */}
-                        <EpisodeSelector
-                            tvId={tv.id}
-                            currentSeason={seasonNumber}
-                            currentEpisode={episodeNumber}
-                            totalSeasons={tv.number_of_seasons || 1}
-                            episodes={episodes}
-                        />
+                        <div className="relative z-50">
+                            <EpisodeSelector
+                                tvId={tv.id}
+                                currentSeason={seasonNumber}
+                                currentEpisode={episodeNumber}
+                                totalSeasons={tv.number_of_seasons || 1}
+                                episodes={episodes}
+                            />
+                        </div>
 
                         <div className="space-y-3 sm:space-y-4">
                             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">{tv.name || tv.title}</h1>

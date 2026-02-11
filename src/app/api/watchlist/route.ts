@@ -24,7 +24,8 @@ export async function POST(req: Request) {
 
         return NextResponse.json(watchlistItem);
     } catch (error) {
-        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+        console.error("Watchlist POST error:", error);
+        return NextResponse.json({ message: "Internal server error", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
 
@@ -49,7 +50,8 @@ export async function DELETE(req: Request) {
 
         return NextResponse.json({ message: "Removed from watchlist" });
     } catch (error) {
-        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+        console.error("Watchlist DELETE error:", error);
+        return NextResponse.json({ message: "Internal server error", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
 

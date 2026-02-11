@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ address: newAddress });
     } catch (error) {
         console.error("Error creating crypto address:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
 
@@ -83,7 +83,7 @@ export async function PUT(req: Request) {
         return NextResponse.json({ address: updatedAddress });
     } catch (error) {
         console.error("Error updating crypto address:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
 

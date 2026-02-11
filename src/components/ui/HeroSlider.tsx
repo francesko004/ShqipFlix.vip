@@ -74,7 +74,7 @@ export function HeroSlider({ items }: HeroSliderProps) {
 
     return (
         <section
-            className="relative min-h-[60vh] md:min-h-[70vh] lg:h-[85vh] w-full items-center flex overflow-hidden"
+            className="relative min-h-[75vh] md:min-h-[70vh] lg:h-[85vh] w-full items-center flex overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -97,7 +97,7 @@ export function HeroSlider({ items }: HeroSliderProps) {
                     </div>
                 ))}
                 {/* Responsive Gradients - Stronger on mobile for better text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0b0c15] via-[#0b0c15]/95 md:via-[#0b0c15]/80 lg:via-[#0b0c15]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0b0c15] via-[#0b0c15]/80 md:via-[#0b0c15]/80 lg:via-[#0b0c15]/40 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c15] via-[#0b0c15]/60 md:via-transparent to-transparent" />
             </div>
 
@@ -143,8 +143,8 @@ export function HeroSlider({ items }: HeroSliderProps) {
                         )}
                         <span className="text-green-500 font-bold drop-shadow-sm">{Math.round((currentItem.vote_average || 0) * 10)}% Match</span>
                         <span>{currentItem.release_date || currentItem.first_air_date ? new Date(currentItem.release_date || currentItem.first_air_date || "").getFullYear() : "N/A"}</span>
-                        <span className="bg-white/20 px-2 py-0.5 rounded text-white uppercase text-[9px] md:text-[10px] tracking-wider">4K Ultra HD</span>
-                        <span className="border border-white/40 px-2 py-0.5 rounded text-gray-200 uppercase text-[9px] md:text-[10px]">{currentItem.media_type}</span>
+                        <span className="bg-white/20 px-2 py-0.5 rounded text-white uppercase text-[10px] md:text-[10px] tracking-wider font-bold">HD</span>
+                        <span className="border border-white/40 px-2 py-0.5 rounded text-gray-200 uppercase text-[10px] md:text-[10px]">{currentItem.media_type}</span>
                     </div>
 
                     <p className="text-sm md:text-base lg:text-lg text-gray-200 line-clamp-2 md:line-clamp-3 lg:line-clamp-4 max-w-2xl mx-auto md:mx-0 drop-shadow-md leading-relaxed">
@@ -154,7 +154,7 @@ export function HeroSlider({ items }: HeroSliderProps) {
                     <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-2 md:gap-3 lg:gap-4 pt-2 md:pt-4">
                         <Button
                             size="lg"
-                            className="w-full sm:w-auto gap-2 text-sm md:text-base font-bold bg-white text-black hover:bg-white/90 shadow-lg shadow-white/5 transition-transform hover:scale-105 h-11 md:h-12"
+                            className="w-full sm:w-auto gap-2 text-base md:text-base font-bold bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-transform hover:scale-105 h-12 md:h-12"
                             asChild
                         >
                             <Link href={link}>

@@ -40,8 +40,8 @@ export async function POST(req: Request) {
 
         return NextResponse.json(historyItem);
     } catch (error) {
-        console.error("History error:", error);
-        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+        console.error("History POST error:", error);
+        return NextResponse.json({ message: "Internal server error", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
 
