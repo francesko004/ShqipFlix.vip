@@ -17,7 +17,7 @@ export default function LiveTVPage() {
     const [groupedChannels, setGroupedChannels] = useState<CategoryGroup[]>([]);
     const [selectedChannel, setSelectedChannel] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<"channels" | "sports">("channels");
+    const [activeTab, setActiveTab] = useState<"channels" | "sports" | "schedule">("channels");
 
     useEffect(() => {
         fetchChannels();
@@ -126,6 +126,16 @@ export default function LiveTVPage() {
                                 </div>
                                 {activeTab === "sports" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500 shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
                             </button>
+                            <button
+                                onClick={() => setActiveTab("schedule")}
+                                className={`lg:hidden relative pb-4 text-sm font-bold tracking-wider uppercase transition-colors ${activeTab === "schedule" ? "text-red-500" : "text-gray-500 hover:text-white"}`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Signal className="w-4 h-4" />
+                                    Up Next
+                                </div>
+                                {activeTab === "schedule" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500 shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
+                            </button>
                         </div>
 
                         {/* Dynamic Content */}
@@ -206,51 +216,95 @@ export default function LiveTVPage() {
                                     </div>
                                 </div>
                             </div>
-                        )}
+                            </div>
+                    ) : activeTab === "schedule" ? (
+                    <div className="space-y-8 animate-in fade-in duration-500 lg:hidden">
+                        <SidebarContent />
                     </div>
-
-                    {/* Sidebar / Schedule */}
-                    <div className="lg:w-80 space-y-8">
-                        <div className="bg-[#0b0c15] border border-white/5 rounded-2xl p-6 space-y-6">
-                            <h2 className="text-lg font-bold flex items-center gap-2 text-red-500">
-                                <Signal className="w-5 h-5" />
-                                Up Next
-                            </h2>
+                    ) : (
+                    <div className="space-y-8 animate-in fade-in duration-500">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <div className="space-y-4">
-                                {[1, 2, 3].map((i) => (
-                                    <div key={i} className="flex gap-4 group cursor-pointer">
-                                        <div className="w-16 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-red-600/20 transition-colors">
-                                            <Play className="w-4 h-4 text-gray-500 group-hover:text-red-500" />
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-xs text-red-500 font-bold uppercase tracking-wider">20:45 CET</p>
-                                            <h4 className="text-sm font-bold text-gray-200 truncate group-hover:text-white">Champions League: Finale</h4>
-                                            <p className="text-[10px] text-gray-500 truncate">SuperSport 1 HD</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-300">
+                                    <Trophy className="w-5 h-5 text-yellow-500" />
+                                    Live Scores & Highlights
+                                </h3>
+                                <div className="rounded-2xl overflow-hidden border border-white/5 bg-[#0b0c15]">
+                                    <iframe
+                                        src="https://www.scorebat.com/embed/livescore/"
+                                        className="w-full h-[600px] border-none"
+                                        allow="autoplay; fullscreen"
+                                    />
+                                </div>
                             </div>
-                            <Button className="w-full bg-white/5 hover:bg-white/10 text-gray-300 border-none rounded-xl h-11 text-xs font-bold uppercase tracking-widest">
-                                Full Schedule
-                            </Button>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-red-600 to-red-900 rounded-2xl p-6 relative overflow-hidden group">
-                            <div className="relative z-10 space-y-2">
-                                <p className="text-white/80 text-[10px] uppercase font-bold tracking-[0.2em]">Premium Access</p>
-                                <h3 className="text-xl font-black text-white leading-tight">UCL 2026 LIVE STREAMING</h3>
-                                <p className="text-white/60 text-xs">Don&apos;t miss a single match. Watch all matches in Ultra HD 4K.</p>
-                                <Button className="mt-4 bg-white text-red-600 hover:bg-white/90 font-bold rounded-xl h-10 px-6 text-xs uppercase tracking-wider">
-                                    Get Notified
-                                </Button>
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-300">
+                                    <Calendar className="w-5 h-5 text-blue-500" />
+                                    Video Highlights
+                                </h3>
+                                <div className="rounded-2xl overflow-hidden border border-white/5 bg-[#0b0c15]">
+                                    <iframe
+                                        src="https://www.scorebat.com/embed/g/"
+                                        className="w-full h-[600px] border-none"
+                                        allow="autoplay; fullscreen"
+                                    />
+                                </div>
                             </div>
-                            <Trophy className="absolute -right-4 -bottom-4 w-32 h-32 text-white/5 group-hover:scale-110 transition-transform duration-500" />
                         </div>
                     </div>
+                        )}
                 </div>
-            </main>
 
-            <Footer />
+                {/* Sidebar / Schedule (Desktop Only) */}
+                <div className="hidden lg:block lg:w-80 space-y-8">
+                    <SidebarContent />
+                </div>
         </div>
+        </main >
+
+        <Footer />
+    </div >
+);
+}
+
+function SidebarContent() {
+    return (
+        <>
+            <div className="bg-[#0b0c15] border border-white/5 rounded-2xl p-6 space-y-6">
+                <h2 className="text-lg font-bold flex items-center gap-2 text-red-500">
+                    <Signal className="w-5 h-5" />
+                    Up Next
+                </h2>
+                <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="flex gap-4 group cursor-pointer">
+                            <div className="w-16 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-red-600/20 transition-colors">
+                                <Play className="w-4 h-4 text-gray-500 group-hover:text-red-500" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-xs text-red-500 font-bold uppercase tracking-wider">20:45 CET</p>
+                                <h4 className="text-sm font-bold text-gray-200 truncate group-hover:text-white">Champions League: Finale</h4>
+                                <p className="text-[10px] text-gray-500 truncate">SuperSport 1 HD</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <Button className="w-full bg-white/5 hover:bg-white/10 text-gray-300 border-none rounded-xl h-11 text-xs font-bold uppercase tracking-widest">
+                    Full Schedule
+                </Button>
+            </div>
+
+            <div className="bg-gradient-to-br from-red-600 to-red-900 rounded-2xl p-6 relative overflow-hidden group">
+                <div className="relative z-10 space-y-2">
+                    <p className="text-white/80 text-[10px] uppercase font-bold tracking-[0.2em]">Premium Access</p>
+                    <h3 className="text-xl font-black text-white leading-tight">UCL 2026 LIVE STREAMING</h3>
+                    <p className="text-white/60 text-xs">Don&apos;t miss a single match. Watch all matches in Ultra HD 4K.</p>
+                    <Button className="mt-4 bg-white text-red-600 hover:bg-white/90 font-bold rounded-xl h-10 px-6 text-xs uppercase tracking-wider">
+                        Get Notified
+                    </Button>
+                </div>
+                <Trophy className="absolute -right-4 -bottom-4 w-32 h-32 text-white/5 group-hover:scale-110 transition-transform duration-500" />
+            </div>
+        </>
     );
 }
