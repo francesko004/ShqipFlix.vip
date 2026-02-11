@@ -185,6 +185,10 @@ export default function LiveTVPage() {
                                     </section>
                                 ))}
                             </div>
+                        ) : activeTab === "schedule" ? (
+                            <div className="space-y-8 animate-in fade-in duration-500 lg:hidden">
+                                <SidebarContent />
+                            </div>
                         ) : (
                             <div className="space-y-8 animate-in fade-in duration-500">
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -216,55 +220,19 @@ export default function LiveTVPage() {
                                     </div>
                                 </div>
                             </div>
-                            </div>
-                    ) : activeTab === "schedule" ? (
-                    <div className="space-y-8 animate-in fade-in duration-500 lg:hidden">
+                        )}
+                    </div>
+
+                    {/* Sidebar / Schedule (Desktop Only) */}
+                    <div className="hidden lg:block lg:w-80 space-y-8">
                         <SidebarContent />
                     </div>
-                    ) : (
-                    <div className="space-y-8 animate-in fade-in duration-500">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-300">
-                                    <Trophy className="w-5 h-5 text-yellow-500" />
-                                    Live Scores & Highlights
-                                </h3>
-                                <div className="rounded-2xl overflow-hidden border border-white/5 bg-[#0b0c15]">
-                                    <iframe
-                                        src="https://www.scorebat.com/embed/livescore/"
-                                        className="w-full h-[600px] border-none"
-                                        allow="autoplay; fullscreen"
-                                    />
-                                </div>
-                            </div>
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-300">
-                                    <Calendar className="w-5 h-5 text-blue-500" />
-                                    Video Highlights
-                                </h3>
-                                <div className="rounded-2xl overflow-hidden border border-white/5 bg-[#0b0c15]">
-                                    <iframe
-                                        src="https://www.scorebat.com/embed/g/"
-                                        className="w-full h-[600px] border-none"
-                                        allow="autoplay; fullscreen"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        )}
                 </div>
+            </main>
 
-                {/* Sidebar / Schedule (Desktop Only) */}
-                <div className="hidden lg:block lg:w-80 space-y-8">
-                    <SidebarContent />
-                </div>
+            <Footer />
         </div>
-        </main >
-
-        <Footer />
-    </div >
-);
+    );
 }
 
 function SidebarContent() {
