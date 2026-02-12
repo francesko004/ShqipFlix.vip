@@ -90,7 +90,15 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
                     {/* Main Content (Player + Info) */}
                     <div className="lg:col-span-3 space-y-6 sm:space-y-8">
-                        <VideoPlayer tmdbId={tv.id} type="tv" season={seasonNumber} episode={episodeNumber} />
+                        <VideoPlayer
+                            tmdbId={tv.id}
+                            type="tv"
+                            title={tv.name || tv.title}
+                            posterPath={tv.poster_path || undefined}
+                            season={seasonNumber}
+                            episode={episodeNumber}
+                        />
+
 
                         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                             <WatchlistButton item={tv} />

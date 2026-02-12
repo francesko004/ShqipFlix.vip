@@ -66,8 +66,14 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
                     {/* Main Content (Player + Info) */}
                     <div className="lg:col-span-3 space-y-8">
                         <div className="flex flex-col sm:flex-row items-center gap-4">
-                            <VideoPlayer tmdbId={movie.id} type="movie" />
+                            <VideoPlayer
+                                tmdbId={movie.id}
+                                type="movie"
+                                title={movie.title || movie.name}
+                                posterPath={movie.poster_path || undefined}
+                            />
                         </div>
+
 
                         <div className="flex flex-wrap items-center gap-4">
                             <WatchlistButton item={movie} />

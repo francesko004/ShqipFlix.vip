@@ -6,9 +6,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
 
 model User {
   id            String          @id @default(cuid())
@@ -106,12 +107,18 @@ model GlobalSettings {
   id              Int      @id @default(1)
   siteName        String   @default("ShqipFlix")
   siteDescription String   @default("Platforma lider shqiptare për transmetimin e filmave, serialeve dhe kanaleve Live TV.")
+  keywords        String   @default("filma shqip, seriale shqip, streaming, shqipflix")
   supportEmail    String   @default("support@shqipflix.vip")
   logoUrl         String?
+  facebookUrl     String?
+  instagramUrl    String?
+  twitterUrl      String?
+  analyticsId     String?
   adFrequency     Int      @default(30) // Minutes between ads
   maintenanceMode Boolean  @default(false)
   updatedAt       DateTime @updatedAt
 }
+
 
 model Notification {
   id        String   @id @default(cuid())
@@ -212,3 +219,17 @@ model Genre {
   @@index([slug])
 }
 
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("PENDING") // PENDING, READ, REPLIED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([status])
+  @@index([createdAt])
+}

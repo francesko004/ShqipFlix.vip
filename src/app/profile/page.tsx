@@ -74,7 +74,9 @@ export default function ProfilePage() {
                                         </div>
                                         <div>
                                             <p className="text-xs text-gray-500 font-bold uppercase">Member Since</p>
-                                            <p className="text-white font-medium">January 2026</p>
+                                            <p className="text-white font-medium">
+                                                {session.user.createdAt ? format(new Date(session.user.createdAt), "MMMM yyyy") : "January 2026"}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

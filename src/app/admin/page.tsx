@@ -8,7 +8,8 @@ import {
     Plus,
     MoreVertical,
     Activity,
-    Tv
+    Tv,
+    MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ContentRefreshButton } from "@/components/admin/ContentRefreshButton";
@@ -58,7 +59,9 @@ export default async function AdminDashboard() {
                 <div className="lg:col-span-2 bg-[#0b0c15] border border-white/5 rounded-2xl p-4 lg:p-6">
                     <div className="flex items-center justify-between mb-4 lg:mb-6">
                         <h2 className="text-lg lg:text-xl font-bold">Recent Registrations</h2>
-                        <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs lg:text-sm">View All</Button>
+                        <Link href="/admin/users">
+                            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-xs lg:text-sm">View All</Button>
+                        </Link>
                     </div>
 
                     <div className="space-y-3 lg:space-y-4">
@@ -73,7 +76,9 @@ export default async function AdminDashboard() {
                                         <p className="text-[10px] lg:text-xs text-gray-500 truncate">{user.role} • Registered {new Date(user.createdAt).toLocaleDateString()}</p>
                                     </div>
                                 </div>
-                                <Button variant="ghost" size="icon" className="flex-shrink-0"><MoreVertical className="w-4 h-4" /></Button>
+                                <Link href="/admin/users">
+                                    <Button variant="ghost" size="icon" className="flex-shrink-0"><MoreVertical className="w-4 h-4" /></Button>
+                                </Link>
                             </div>
                         ))}
                     </div>
@@ -93,6 +98,18 @@ export default async function AdminDashboard() {
                             <Link href="/admin/content">
                                 <Film className="w-4 h-4 lg:w-5 lg:h-5" />
                                 Content Management
+                            </Link>
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start gap-3 bg-white/5 border-white/10 h-11 lg:h-12 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 text-sm lg:text-base" asChild>
+                            <Link href="/admin/requests">
+                                <Activity className="w-4 h-4 lg:w-5 lg:h-5 text-red-500" />
+                                Movie Requests
+                            </Link>
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start gap-3 bg-white/5 border-white/10 h-11 lg:h-12 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 text-sm lg:text-base" asChild>
+                            <Link href="/admin/support">
+                                <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5 text-red-500" />
+                                Support Tickets
                             </Link>
                         </Button>
                         <ContentRefreshButton />

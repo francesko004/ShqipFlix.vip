@@ -22,8 +22,13 @@ export async function getSettings() {
 export async function updateSettings(data: {
     siteName: string;
     siteDescription: string;
+    keywords: string;
     supportEmail: string;
     logoUrl?: string;
+    facebookUrl?: string;
+    instagramUrl?: string;
+    twitterUrl?: string;
+    analyticsId?: string;
     adFrequency: number;
     maintenanceMode: boolean
 }) {
@@ -40,20 +45,31 @@ export async function updateSettings(data: {
             update: {
                 siteName: data.siteName,
                 siteDescription: data.siteDescription,
+                keywords: data.keywords,
                 supportEmail: data.supportEmail,
                 logoUrl: data.logoUrl,
+                facebookUrl: data.facebookUrl,
+                instagramUrl: data.instagramUrl,
+                twitterUrl: data.twitterUrl,
+                analyticsId: data.analyticsId,
                 adFrequency: data.adFrequency,
                 maintenanceMode: data.maintenanceMode,
             },
             create: {
                 siteName: data.siteName,
                 siteDescription: data.siteDescription,
+                keywords: data.keywords,
                 supportEmail: data.supportEmail,
                 logoUrl: data.logoUrl,
+                facebookUrl: data.facebookUrl,
+                instagramUrl: data.instagramUrl,
+                twitterUrl: data.twitterUrl,
+                analyticsId: data.analyticsId,
                 adFrequency: data.adFrequency,
                 maintenanceMode: data.maintenanceMode,
             }
         });
+
 
         revalidatePath("/admin/settings");
         revalidatePath("/");

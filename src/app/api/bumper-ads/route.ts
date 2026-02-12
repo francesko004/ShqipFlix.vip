@@ -21,7 +21,14 @@ export async function GET() {
             data: { impressions: { increment: 1 } },
         });
 
-        return NextResponse.json({ ad: randomAd });
+        // Get ad frequency
+        const settings = await prisma.globalSettings.findFirst();
+
+        return NextResponse.json({
+            ad: randomAd,
+            adFrequency: settings?.adFrequency || 30
+        });
+
     } catch (error) {
         console.error("Error fetching bumper ad:", error);
         return NextResponse.json({ ad: null });

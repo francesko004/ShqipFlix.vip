@@ -8,6 +8,7 @@ import { Play, Plus, Check, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { watchlist } from "@/lib/watchlist";
 
 interface MovieCardProps {
     item: MediaItem;
@@ -26,18 +27,14 @@ export function MovieCard({ item }: MovieCardProps) {
 
     useEffect(() => {
         if (session) {
-            const handleUpdate = () => {
-                fetch("/api/watchlist")
-                    .then((res) => res.json())
-                    .then((data) => {
-                        const exists = data.some((i: any) => i.tmdbId === item.id && i.mediaType === item.media_type);
-                        setIsInWatchlist(exists);
-                    });
+            const checkStatus = async () => {
+                const exists = await watchlist.isInList(item.id, item.media_type);
+                setIsInWatchlist(exists);
             };
 
-            handleUpdate();
-            window.addEventListener("watchlist-updated", handleUpdate);
-            return () => window.removeEventListener("watchlist-updated", handleUpdate);
+            checkStatus();
+            window.addEventListener("watchlist-updated", checkStatus);
+            return () => window.removeEventListener("watchlist-updated", checkStatus);
         }
     }, [item.id, item.media_type, session]);
 
@@ -53,26 +50,11 @@ export function MovieCard({ item }: MovieCardProps) {
         setIsLoading(true);
         try {
             if (isInWatchlist) {
-                await fetch("/api/watchlist", {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ tmdbId: item.id, mediaType: item.media_type }),
-                });
-                setIsInWatchlist(false);
+                await watchlist.remove(item.id, item.media_type);
             } else {
-                await fetch("/api/watchlist", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        tmdbId: item.id,
-                        title,
-                        posterPath: item.poster_path,
-                        mediaType: item.media_type,
-                    }),
-                });
-                setIsInWatchlist(true);
+                await watchlist.add(item);
             }
-            window.dispatchEvent(new Event("watchlist-updated"));
+            // watchlist.add/remove already dispatches "watchlist-updated"
         } catch (err) {
             console.error("Watchlist error:", err);
         } finally {

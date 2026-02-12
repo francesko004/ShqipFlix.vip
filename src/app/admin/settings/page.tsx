@@ -12,19 +12,30 @@ export default async function AdminSettingsPage() {
         "use server";
         const siteName = formData.get("siteName") as string;
         const siteDescription = formData.get("siteDescription") as string;
+        const keywords = formData.get("keywords") as string;
         const supportEmail = formData.get("supportEmail") as string;
         const logoUrl = formData.get("logoUrl") as string;
+        const facebookUrl = formData.get("facebookUrl") as string;
+        const instagramUrl = formData.get("instagramUrl") as string;
+        const twitterUrl = formData.get("twitterUrl") as string;
+        const analyticsId = formData.get("analyticsId") as string;
         const adFrequency = parseInt(formData.get("adFrequency") as string) || 30;
         const maintenanceMode = formData.get("maintenanceMode") === "on";
 
         await updateSettings({
             siteName,
             siteDescription,
+            keywords,
             supportEmail,
             logoUrl,
+            facebookUrl,
+            instagramUrl,
+            twitterUrl,
+            analyticsId,
             adFrequency,
             maintenanceMode
         });
+
 
         revalidatePath("/admin/settings");
     }
@@ -71,6 +82,16 @@ export default async function AdminSettingsPage() {
                             />
                         </div>
                         <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-400">SEO Keywords (Comma separated)</label>
+                            <input
+                                name="keywords"
+                                type="text"
+                                defaultValue={settings?.keywords || ""}
+                                className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white"
+                                placeholder="filma shqip, seriale..."
+                            />
+                        </div>
+                        <div className="space-y-2">
                             <label className="text-sm font-medium text-gray-400">Logo URL (Optional)</label>
                             <input
                                 name="logoUrl"
@@ -89,6 +110,45 @@ export default async function AdminSettingsPage() {
                                 className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white"
                             />
                         </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Facebook URL</label>
+                                <input
+                                    name="facebookUrl"
+                                    type="text"
+                                    defaultValue={settings?.facebookUrl || ""}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white text-sm"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Instagram URL</label>
+                                <input
+                                    name="instagramUrl"
+                                    type="text"
+                                    defaultValue={settings?.instagramUrl || ""}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white text-sm"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Twitter/X URL</label>
+                                <input
+                                    name="twitterUrl"
+                                    type="text"
+                                    defaultValue={settings?.twitterUrl || ""}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white text-sm"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Google Analytics ID</label>
+                                <input
+                                    name="analyticsId"
+                                    type="text"
+                                    defaultValue={settings?.analyticsId || ""}
+                                    className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white text-sm"
+                                    placeholder="G-XXXXXXX"
+                                />
+                            </div>
+                        </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-gray-400">Ad Frequency (Minutes)</label>
                             <div className="flex items-center gap-4">
@@ -102,6 +162,7 @@ export default async function AdminSettingsPage() {
                                 <span className="text-xs text-gray-500">Wait time between bumper ads. Set to 0 to show on every play.</span>
                             </div>
                         </div>
+
                     </div>
                 </div>
 

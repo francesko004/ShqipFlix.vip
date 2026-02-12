@@ -236,6 +236,31 @@ export default function LiveTVPage() {
 }
 
 function SidebarContent() {
+    const [schedule, setSchedule] = useState<{ time: string, title: string, channel: string }[]>([]);
+
+    useEffect(() => {
+        // Generate a plausible schedule for the next few hours
+        const programs = [
+            "Champions League: Finale", "Top Story", "Përputhen", "Lajmet e Mbrëmjes",
+            "Big Brother VIP", "Klan News", "Sport Express", "Zonë e Lirë",
+            "Opinion", "Fol Shqip", "Portokalli", "E Diell"
+        ];
+        const channels = ["SuperSport 1 HD", "Top Channel", "TV Klan", "Klan Plus", "RTSH 1"];
+
+        const now = new Date();
+        const generated = [];
+
+        for (let i = 0; i < 5; i++) {
+            const time = new Date(now.getTime() + i * 45 * 60 * 1000); // Every 45 mins
+            generated.push({
+                time: time.toLocaleTimeString("sq-AL", { hour: "2-digit", minute: "2-digit" }),
+                title: programs[Math.floor(Math.random() * programs.length)],
+                channel: channels[Math.floor(Math.random() * channels.length)]
+            });
+        }
+        setSchedule(generated);
+    }, []);
+
     return (
         <>
             <div className="bg-[#0b0c15] border border-white/5 rounded-2xl p-6 space-y-6">
@@ -244,18 +269,27 @@ function SidebarContent() {
                     Up Next
                 </h2>
                 <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
+                    {schedule.map((item, i) => (
                         <div key={i} className="flex gap-4 group cursor-pointer">
                             <div className="w-16 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-red-600/20 transition-colors">
                                 <Play className="w-4 h-4 text-gray-500 group-hover:text-red-500" />
                             </div>
                             <div className="min-w-0">
-                                <p className="text-xs text-red-500 font-bold uppercase tracking-wider">20:45 CET</p>
-                                <h4 className="text-sm font-bold text-gray-200 truncate group-hover:text-white">Champions League: Finale</h4>
-                                <p className="text-[10px] text-gray-500 truncate">SuperSport 1 HD</p>
+                                <p className="text-xs text-red-500 font-bold uppercase tracking-wider">{item.time} CET</p>
+                                <h4 className="text-sm font-bold text-gray-200 truncate group-hover:text-white">{item.title}</h4>
+                                <p className="text-[10px] text-gray-500 truncate">{item.channel}</p>
                             </div>
                         </div>
                     ))}
+                    {schedule.length === 0 && (
+                        <div className="animate-pulse flex gap-4">
+                            <div className="w-16 h-12 rounded-lg bg-white/5 shrink-0" />
+                            <div className="flex-1 space-y-2 py-1">
+                                <div className="h-2 bg-white/5 rounded w-1/4" />
+                                <div className="h-2 bg-white/5 rounded w-3/4" />
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <Button className="w-full bg-white/5 hover:bg-white/10 text-gray-300 border-none rounded-xl h-11 text-xs font-bold uppercase tracking-widest">
                     Full Schedule
@@ -276,3 +310,4 @@ function SidebarContent() {
         </>
     );
 }
+

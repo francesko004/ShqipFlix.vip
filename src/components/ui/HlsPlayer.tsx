@@ -8,9 +8,11 @@ interface HlsPlayerProps {
     src: string;
     poster?: string;
     onComplete?: () => void;
+    onProgress?: (progress: number) => void;
 }
 
-export function HlsPlayer({ src, poster, onComplete }: HlsPlayerProps) {
+
+export function HlsPlayer({ src, poster, onComplete, onProgress }: HlsPlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -42,10 +44,15 @@ export function HlsPlayer({ src, poster, onComplete }: HlsPlayerProps) {
             const currentProgress = (video.currentTime / video.duration) * 100;
             setProgress(currentProgress);
 
+            if (onProgress) {
+                onProgress(currentProgress);
+            }
+
             if (video.ended && onComplete) {
                 onComplete();
             }
         };
+
 
         video.addEventListener("timeupdate", handleTimeUpdate);
         video.addEventListener("play", () => setIsPlaying(true));

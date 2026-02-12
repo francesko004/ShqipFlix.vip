@@ -22,20 +22,27 @@ export function BumperPlayer({ onComplete }: BumperPlayerProps) {
     const [canSkip, setCanSkip] = useState(false);
 
     useEffect(() => {
+        const lastAdShown = localStorage.getItem("lastAdShown");
+        const now = Date.now();
+
         // Fetch a random active bumper ad
         fetch("/api/bumper-ads")
             .then((res) => res.json())
             .then((data) => {
-                if (data.ad) {
+                const frequencyMs = (data.adFrequency || 30) * 60 * 1000;
+
+                if (data.ad && (!lastAdShown || now - parseInt(lastAdShown) > frequencyMs)) {
                     setAd(data.ad);
                     setCountdown(data.ad.duration);
+                    localStorage.setItem("lastAdShown", now.toString());
                 } else {
-                    // No ad available, skip
+                    // No ad available or frequency limit not met, skip
                     onComplete();
                 }
             })
             .catch(() => onComplete());
     }, [onComplete]);
+
 
     useEffect(() => {
         if (!ad || countdown <= 0) return;

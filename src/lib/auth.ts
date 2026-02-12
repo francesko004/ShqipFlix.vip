@@ -40,6 +40,7 @@ export const authOptions: NextAuthOptions = {
                     id: user.id,
                     username: user.username,
                     role: user.role as "USER" | "ADMIN",
+                    createdAt: user.createdAt.toISOString(),
                 };
             }
         })
@@ -50,14 +51,16 @@ export const authOptions: NextAuthOptions = {
                 token.id = user.id;
                 token.username = user.username;
                 token.role = user.role;
+                token.createdAt = (user as any).createdAt;
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id;
-                session.user.username = token.username;
-                session.user.role = token.role;
+                session.user.id = token.id as string;
+                session.user.username = token.username as string;
+                session.user.role = token.role as "USER" | "ADMIN";
+                session.user.createdAt = token.createdAt as string;
             }
             return session;
         },

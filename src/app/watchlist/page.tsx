@@ -14,10 +14,16 @@ export default function WatchlistPage() {
 
     useEffect(() => {
         setMounted(true);
-        setItems(watchlist.get());
+
+        const loadItems = async () => {
+            const data = await watchlist.get();
+            setItems(data);
+        };
+
+        loadItems();
 
         const handleUpdate = () => {
-            setItems(watchlist.get());
+            loadItems();
         };
 
         window.addEventListener("watchlist-updated", handleUpdate);

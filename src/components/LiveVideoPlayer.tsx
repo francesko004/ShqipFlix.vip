@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import Hls from "hls.js";
 import { Maximize, Minimize, Volume2, VolumeX, Play, Pause, Settings, Info } from "lucide-react";
 import Image from "next/image";
 
@@ -12,8 +13,33 @@ interface LiveVideoPlayerProps {
 }
 
 export function LiveVideoPlayer({ streamUrl, isIframe, name, logo }: LiveVideoPlayerProps) {
+    const videoRef = useRef<HTMLVideoElement>(null);
     const [isMuted, setIsMuted] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(true);
+
+    useEffect(() => {
+        if (!isIframe && videoRef.current && streamUrl) {
+            const video = videoRef.current;
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play().catch(console.error);
+                });
+
+                return () => {
+                    hls.destroy();
+                };
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // For Safari
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    video.play().catch(console.error);
+                });
+            }
+        }
+    }, [isIframe, streamUrl]);
 
     if (isIframe) {
         return (
@@ -45,13 +71,12 @@ export function LiveVideoPlayer({ streamUrl, isIframe, name, logo }: LiveVideoPl
 
     return (
         <div className="relative aspect-video w-full bg-black rounded-2xl overflow-hidden border border-white/5 shadow-2xl group">
-            {/* Direct Video Player Placeholder - would typically use HLS.js or video.js */}
             <video
-                src={streamUrl}
+                ref={videoRef}
                 className="w-full h-full"
-                autoPlay
                 controls
                 muted={isMuted}
+                playsInline
             />
 
             <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/80 to-transparent flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -70,3 +95,4 @@ export function LiveVideoPlayer({ streamUrl, isIframe, name, logo }: LiveVideoPl
         </div>
     );
 }
+

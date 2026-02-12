@@ -13,8 +13,32 @@ export async function POST(req: Request) {
 
         const { tmdbId, title, posterPath, mediaType, progress } = await req.json();
 
-        if (!tmdbId || !title || !mediaType) {
+        if (!tmdbId || !mediaType) {
             return NextResponse.json({ message: "Missing data" }, { status: 400 });
+        }
+
+        const existing = await prisma.historyItem.findUnique({
+            where: {
+                userId_tmdbId_mediaType: {
+                    userId: session.user.id,
+                    tmdbId: parseInt(tmdbId),
+                    mediaType,
+                }
+            }
+        });
+
+        let finalTitle = title || existing?.title;
+        let finalPoster = posterPath || existing?.posterPath;
+
+        // If it's a new entry and metadata is missing, fetch it
+        if (!finalTitle || !finalPoster) {
+            try {
+                const details = await tmdb.getDetails(mediaType as "movie" | "tv", tmdbId.toString());
+                finalTitle = finalTitle || details.title || details.name;
+                finalPoster = finalPoster || details.poster_path;
+            } catch (err) {
+                console.error("Failed to fetch TMDB details for history:", err);
+            }
         }
 
         const historyItem = await prisma.historyItem.upsert({
@@ -27,13 +51,13 @@ export async function POST(req: Request) {
             },
             update: {
                 lastWatched: new Date(),
-                progress: progress || 0,
+                progress: progress !== undefined ? progress : (existing?.progress || 0),
             },
             create: {
                 userId: session.user.id,
                 tmdbId: parseInt(tmdbId),
-                title,
-                posterPath,
+                title: finalTitle || "Unknown",
+                posterPath: finalPoster,
                 mediaType,
                 progress: progress || 0,
             }
