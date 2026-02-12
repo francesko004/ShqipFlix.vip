@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Play, Star } from "lucide-react";
+import { ChevronDown, Play, Star, CheckCircle } from "lucide-react";
 import { Episode } from "@/types/tmdb";
 import Image from "next/image";
 
@@ -12,9 +12,10 @@ interface EpisodeSelectorProps {
     currentEpisode: number;
     totalSeasons: number;
     episodes: Episode[];
+    watchedEpisodes?: number[];
 }
 
-export function EpisodeSelector({ tvId, currentSeason, currentEpisode, totalSeasons, episodes }: EpisodeSelectorProps) {
+export function EpisodeSelector({ tvId, currentSeason, currentEpisode, totalSeasons, episodes, watchedEpisodes = [] }: EpisodeSelectorProps) {
     const [isSeasonOpen, setIsSeasonOpen] = useState(false);
     const [isEpisodeOpen, setIsEpisodeOpen] = useState(false);
 
@@ -109,12 +110,17 @@ export function EpisodeSelector({ tvId, currentSeason, currentEpisode, totalSeas
                                                 <h4 className={`text-xs font-bold truncate ${episode.episode_number === currentEpisode ? "text-red-500" : "text-white"}`}>
                                                     {episode.episode_number}. {episode.name}
                                                 </h4>
-                                                {episode.vote_average > 0 && (
-                                                    <div className="flex items-center gap-0.5 text-[10px] text-yellow-500">
-                                                        <Star className="w-2.5 h-2.5 fill-current" />
-                                                        {episode.vote_average.toFixed(1)}
-                                                    </div>
-                                                )}
+                                                <div className="flex items-center gap-1.5 ml-auto">
+                                                    {watchedEpisodes.includes(episode.episode_number) && (
+                                                        <CheckCircle className="w-3 h-3 text-green-500 fill-green-500/20" />
+                                                    )}
+                                                    {episode.vote_average > 0 && (
+                                                        <div className="flex items-center gap-0.5 text-[10px] text-yellow-500">
+                                                            <Star className="w-2.5 h-2.5 fill-current" />
+                                                            {episode.vote_average.toFixed(1)}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                             <p className="text-[10px] text-gray-400 line-clamp-2 mt-0.5 leading-tight">
                                                 {episode.overview || "No description available."}

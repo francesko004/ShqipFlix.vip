@@ -11,12 +11,18 @@ export default async function AdminSettingsPage() {
     async function saveSettings(formData: FormData) {
         "use server";
         const siteName = formData.get("siteName") as string;
+        const siteDescription = formData.get("siteDescription") as string;
         const supportEmail = formData.get("supportEmail") as string;
+        const logoUrl = formData.get("logoUrl") as string;
+        const adFrequency = parseInt(formData.get("adFrequency") as string) || 30;
         const maintenanceMode = formData.get("maintenanceMode") === "on";
 
         await updateSettings({
             siteName,
+            siteDescription,
             supportEmail,
+            logoUrl,
+            adFrequency,
             maintenanceMode
         });
 
@@ -37,21 +43,41 @@ export default async function AdminSettingsPage() {
 
             <form action={saveSettings} className="grid gap-6">
                 <div className="bg-[#0b0c15] border border-white/5 rounded-xl p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-bold">General Configuration</h3>
-                        <button type="submit" className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm font-bold">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-bold text-white">General Configuration</h3>
+                        <button type="submit" className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm font-bold shadow-lg shadow-red-900/20">
                             <Save className="w-4 h-4" />
                             Save Changes
                         </button>
                     </div>
-                    <div className="grid gap-4 max-w-xl">
+                    <div className="grid gap-6 max-w-2xl">
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-gray-400">Site Name</label>
                             <input
                                 name="siteName"
                                 type="text"
                                 defaultValue={settings?.siteName || "ShqipFlix"}
-                                className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors"
+                                className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-400">Site Description</label>
+                            <textarea
+                                name="siteDescription"
+                                rows={3}
+                                defaultValue={settings?.siteDescription || ""}
+                                className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-sm text-white"
+                                placeholder="For SEO purposes..."
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-400">Logo URL (Optional)</label>
+                            <input
+                                name="logoUrl"
+                                type="text"
+                                defaultValue={settings?.logoUrl || ""}
+                                className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white"
+                                placeholder="https://..."
                             />
                         </div>
                         <div className="space-y-2">
@@ -60,8 +86,21 @@ export default async function AdminSettingsPage() {
                                 name="supportEmail"
                                 type="email"
                                 defaultValue={settings?.supportEmail || "support@shqipflix.vip"}
-                                className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors"
+                                className="w-full bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white"
                             />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-400">Ad Frequency (Minutes)</label>
+                            <div className="flex items-center gap-4">
+                                <input
+                                    name="adFrequency"
+                                    type="number"
+                                    min="0"
+                                    defaultValue={settings?.adFrequency || 30}
+                                    className="w-32 bg-[#050505] border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500 transition-colors text-white"
+                                />
+                                <span className="text-xs text-gray-500">Wait time between bumper ads. Set to 0 to show on every play.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,7 +109,7 @@ export default async function AdminSettingsPage() {
                     <h3 className="text-lg font-bold mb-4 text-red-500">Danger Zone</h3>
                     <div className="flex items-center justify-between p-4 border border-red-500/20 bg-red-500/5 rounded-lg">
                         <div>
-                            <h4 className="font-bold">Maintenance Mode</h4>
+                            <h4 className="font-bold text-white">Maintenance Mode</h4>
                             <p className="text-sm text-gray-400">Disable requests to the site temporarily</p>
                         </div>
                         <div className="relative inline-flex items-center">
@@ -78,7 +117,7 @@ export default async function AdminSettingsPage() {
                                 type="checkbox"
                                 name="maintenanceMode"
                                 defaultChecked={settings?.maintenanceMode || false}
-                                className="w-5 h-5 accent-red-600"
+                                className="w-5 h-5 accent-red-600 cursor-pointer"
                             />
                         </div>
                     </div>

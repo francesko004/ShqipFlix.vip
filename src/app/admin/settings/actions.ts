@@ -19,7 +19,14 @@ export async function getSettings() {
     }
 }
 
-export async function updateSettings(data: { siteName: string; supportEmail: string; maintenanceMode: boolean }) {
+export async function updateSettings(data: {
+    siteName: string;
+    siteDescription: string;
+    supportEmail: string;
+    logoUrl?: string;
+    adFrequency: number;
+    maintenanceMode: boolean
+}) {
     try {
         const first = await prisma.globalSettings.findFirst();
         let id = 1;
@@ -32,12 +39,18 @@ export async function updateSettings(data: { siteName: string; supportEmail: str
             where: { id },
             update: {
                 siteName: data.siteName,
+                siteDescription: data.siteDescription,
                 supportEmail: data.supportEmail,
+                logoUrl: data.logoUrl,
+                adFrequency: data.adFrequency,
                 maintenanceMode: data.maintenanceMode,
             },
             create: {
                 siteName: data.siteName,
+                siteDescription: data.siteDescription,
                 supportEmail: data.supportEmail,
+                logoUrl: data.logoUrl,
+                adFrequency: data.adFrequency,
                 maintenanceMode: data.maintenanceMode,
             }
         });

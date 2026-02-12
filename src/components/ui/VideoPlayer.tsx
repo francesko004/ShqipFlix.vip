@@ -1,18 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BumperPlayer } from "@/components/ui/BumperPlayer";
+import { HlsPlayer } from "@/components/ui/HlsPlayer";
 
 interface VideoPlayerProps {
     tmdbId: number;
     type: "movie" | "tv";
     season?: number;
     episode?: number;
+    hlsUrl?: string; // Optional direct HLS stream URL
 }
 
 export function VideoPlayer({ tmdbId, type, season, episode }: VideoPlayerProps) {
     const [showBumper, setShowBumper] = useState(true);
     const [videoStarted, setVideoStarted] = useState(false);
+
+    useEffect(() => {
+        if (videoStarted && type === "tv" && season && episode) {
+            // Record watched status in background
+            fetch("/api/episodes/history", {
+                method: "POST",
+                body: JSON.stringify({ tvId: tmdbId, season, episode }),
+                headers: { "Content-Type": "application/json" }
+            }).catch(console.error);
+        }
+    }, [videoStarted, type, tmdbId, season, episode]);
 
     const handleBumperComplete = () => {
         setShowBumper(false);
@@ -41,14 +54,18 @@ export function VideoPlayer({ tmdbId, type, season, episode }: VideoPlayerProps)
         <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
             {showBumper && <BumperPlayer onComplete={handleBumperComplete} />}
 
-            {videoStarted && embedUrl && (
-                <iframe
-                    src={embedUrl}
-                    className="w-full h-full"
-                    allowFullScreen
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    title="Video Player"
-                />
+            {videoStarted && (
+                hlsUrl ? (
+                    <HlsPlayer src={hlsUrl} onComplete={() => console.log("HLS Video complete")} />
+                ) : embedUrl ? (
+                    <iframe
+                        src={embedUrl}
+                        className="w-full h-full"
+                        allowFullScreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        title="Video Player"
+                    />
+                ) : null
             )}
 
             {!videoStarted && !showBumper && (

@@ -6,6 +6,7 @@ export const revalidate = 3600 // Revalidate every hour
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://shqipflix.vip'
 
+
     // Static routes
     const staticRoutes: MetadataRoute.Sitemap = [
         {
@@ -35,8 +36,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         {
             url: `${baseUrl}/live`,
             lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.7,
+            changeFrequency: 'always',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/support`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.3,
+        },
+        {
+            url: `${baseUrl}/advertise`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.3,
         },
     ]
 
@@ -48,15 +61,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 id: true,
                 mediaType: true,
                 updatedAt: true,
+                popularity: true,
             },
-            take: 1000, // Limit to prevent huge sitemaps
+            orderBy: { popularity: 'desc' },
+            take: 2000,
         })
 
         const dynamicRoutes: MetadataRoute.Sitemap = mediaContent.map((item) => ({
             url: `${baseUrl}/${item.mediaType}/${item.id}`,
             lastModified: item.updatedAt,
             changeFrequency: 'weekly' as const,
-            priority: 0.6,
+            priority: item.popularity && item.popularity > 50 ? 0.8 : 0.6,
         }))
 
         return [...staticRoutes, ...dynamicRoutes]

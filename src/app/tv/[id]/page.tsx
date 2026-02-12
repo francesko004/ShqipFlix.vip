@@ -17,6 +17,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const tv = await tmdb.getDetails("tv", params.id).catch(() => null);
@@ -49,6 +52,21 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
 
     const seasonData = await tmdb.getSeasonDetails(params.id, seasonNumber).catch(() => null);
     const episodes = seasonData?.episodes || [];
+
+    // Fetch watched episodes for this TV show
+    const session = await getServerSession(authOptions);
+    const watchedEpisodes = session?.user?.id
+        ? await prisma.episodeHistory.findMany({
+            where: {
+                userId: session.user.id,
+                tvId: parseInt(params.id),
+                season: seasonNumber,
+            },
+            select: { episode: true }
+        })
+        : [];
+
+    const watchedEpisodeNumbers = watchedEpisodes.map(we => we.episode);
 
     return (
         <main className="min-h-screen bg-[#0b0c15]">
@@ -108,6 +126,7 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
                                 currentEpisode={episodeNumber}
                                 totalSeasons={tv.number_of_seasons || 1}
                                 episodes={episodes}
+                                watchedEpisodes={watchedEpisodeNumbers}
                             />
                         </div>
 

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { tmdb } from "@/lib/tmdb";
 
 export async function POST(req: Request) {
     try {
@@ -37,6 +38,38 @@ export async function POST(req: Request) {
                 progress: progress || 0,
             }
         });
+
+        // Track genre interests for movies
+        if (mediaType === "movie") {
+            (async () => {
+                try {
+                    const movie = await tmdb.getDetails("movie", tmdbId.toString());
+                    if (movie?.genres) {
+                        for (const genre of movie.genres) {
+                            await prisma.userGenreInterest.upsert({
+                                where: {
+                                    userId_genreId: {
+                                        userId: session.user.id,
+                                        genreId: genre.id,
+                                    },
+                                },
+                                update: {
+                                    count: { increment: 1 },
+                                    updatedAt: new Date(),
+                                },
+                                create: {
+                                    userId: session.user.id,
+                                    genreId: genre.id,
+                                    count: 1,
+                                },
+                            });
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to update genre interests for movie:", err);
+                }
+            })();
+        }
 
         return NextResponse.json(historyItem);
     } catch (error) {

@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -22,6 +22,35 @@ model User {
   notifications Notification[]
   reviews       Review[]
   requests      MovieRequest[]
+  episodeHistory EpisodeHistory[]
+  genreInterests UserGenreInterest[]
+}
+
+model UserGenreInterest {
+  id        String   @id @default(cuid())
+  userId    String
+  genreId   Int
+  count     Int      @default(1)
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, genreId])
+  @@index([userId])
+}
+
+model EpisodeHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  tvId      Int
+  season    Int
+  episode   Int
+  watchedAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, tvId, season, episode])
+  @@index([userId, tvId])
 }
 
 model WatchlistItem {
@@ -76,7 +105,10 @@ model MediaContent {
 model GlobalSettings {
   id              Int      @id @default(1)
   siteName        String   @default("ShqipFlix")
+  siteDescription String   @default("Platforma lider shqiptare për transmetimin e filmave, serialeve dhe kanaleve Live TV.")
   supportEmail    String   @default("support@shqipflix.vip")
+  logoUrl         String?
+  adFrequency     Int      @default(30) // Minutes between ads
   maintenanceMode Boolean  @default(false)
   updatedAt       DateTime @updatedAt
 }
