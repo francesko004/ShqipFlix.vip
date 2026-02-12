@@ -12,7 +12,7 @@ interface VideoPlayerProps {
     hlsUrl?: string; // Optional direct HLS stream URL
 }
 
-export function VideoPlayer({ tmdbId, type, season, episode }: VideoPlayerProps) {
+export function VideoPlayer({ tmdbId, type, season, episode, hlsUrl }: VideoPlayerProps) {
     const [showBumper, setShowBumper] = useState(true);
     const [videoStarted, setVideoStarted] = useState(false);
 

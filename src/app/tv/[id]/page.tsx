@@ -66,7 +66,7 @@ export default async function TVPage({ params, searchParams }: { params: { id: s
         })
         : [];
 
-    const watchedEpisodeNumbers = watchedEpisodes.map(we => we.episode);
+    const watchedEpisodeNumbers = watchedEpisodes.map((we: { episode: number }) => we.episode);
 
     return (
         <main className="min-h-screen bg-[#0b0c15]">

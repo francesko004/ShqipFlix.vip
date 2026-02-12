@@ -88,7 +88,7 @@ export function PWAInstallPrompt() {
                     {isIOS ? (
                         <div className="flex items-center gap-3 bg-white/5 rounded-lg p-3 text-[11px] text-gray-300">
                             <Share className="w-4 h-4 text-blue-400" />
-                            <span>Tap "Share" and then "Add to Home Screen" to install on iOS.</span>
+                            <span>Tap &quot;Share&quot; and then &quot;Add to Home Screen&quot; to install on iOS.</span>
                         </div>
                     ) : (
                         <Button

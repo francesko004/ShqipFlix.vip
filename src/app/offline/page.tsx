@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WifiOff } from "lucide-react";
@@ -14,9 +16,9 @@ export default function OfflinePage() {
                 <div className="w-24 h-24 bg-red-600/10 rounded-full flex items-center justify-center mb-6">
                     <WifiOff className="w-12 h-12 text-red-500" />
                 </div>
-                <h1 className="text-3xl font-bold mb-2">You're Offline</h1>
+                <h1 className="text-3xl font-bold mb-2">You&apos;re Offline</h1>
                 <p className="text-gray-400 max-w-md mb-8">
-                    It looks like you've lost your internet connection. Please check your network and try again.
+                    It looks like you&apos;ve lost your internet connection. Please check your network and try again.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                     <Button
